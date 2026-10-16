@@ -1,22 +1,5 @@
 const [clicks] = (() => {
 
-// URL PARAMETERS
-// censored-name - activate Jennifer Li mode
-// bedtime       - bedtime at 12 AM because you need 8 hours of sleep
-const params = {};
-if (window.location.search) {
-  window.location.search.slice(1).split('&').forEach(entry => {
-    const equalSignLoc = entry.indexOf('=');
-    if (~equalSignLoc) {
-      params[entry.slice(0, equalSignLoc)] = entry.slice(equalSignLoc + 1);
-    } else {
-      params[entry] = true;
-    }
-  });
-}
-if (params['jennifer-li']) params['censored-name'] = true;
-
-const SCORES_COOKIE_NAME = '[gunn-student-sim] scores';
 const config = {
   MAX_SAT_STUDY: 50
 };
@@ -44,24 +27,13 @@ const gameState = {
   warned: false,
   retakeTests: 0,
   avgSleepLength: null,
-  reported: false
+  reported: false,
+  gender: 'they'
 };
 
-const stringifyScore = ((billy, bob, joe, died, hmmm) => { // Don't worry about me!
-  for (let i = 0; i < joe.length; i += 2) {
-    billy[joe[i + 1]] = joe[i];
-    bob[joe[i]] = joe[i + 1];
-  }
-  joe = t => {
-    const end = Math[died[6]](Math[died[5]]() * 6 + 2);
-    for (let i = end; i--;) {
-      const l = String.fromCharCode(Math[died[6]](Math[died[5]]() * 94 + 33));
-      if (!bob[l]) t += l;
-    }
-    return t;
-  };
-  return ziggles => ziggles[died[4]]()[died[1]](died[2])[died[0]](olam => billy[olam] + joe(died[2]))[died[3]](died[2]);
-})({}, {}, atob('QTE2MnozLjQsNUA2Xzc4OEc5ZzA' + String.fromCharCode(61)), JSON.parse(atob('WyJtYXAiLCJzcGxpdCIsIiIsImpvaW4iLCJ0b1N0cmluZyIsInJhbmRvbSIsImZsb29yIl0' + String.fromCharCode(61))), Math);
+// Gender selection at startup
+const selectedGender = prompt("Select gender (male/female/non-binary):", "non-binary");
+if (selectedGender) gameState.gender = selectedGender.toLowerCase();
 
 function updateHomework() {
   renderer.hwCount.textContent = gameState.homeworks;
@@ -86,6 +58,7 @@ function updateHomework() {
     disableBtn(renderer.studyBtn, 'You cannot concentrate because your parents are scolding you.');
   }
 }
+
 function addHours(hours, atHome) {
   gameState.time += hours;
   gameState.day = Math.floor(gameState.time / 24) % 5;
@@ -100,63 +73,14 @@ function addHours(hours, atHome) {
         gameState.avgSleepLength = gameState.avgSleepLength * gameState.accumulativeDay / (gameState.accumulativeDay + 1);
       }
       beginSchool();
-    } else if (params['bedtime'] && Math.floor(gameState.time / 24) > gameState.accumulativeDay) {
-      clicks.sleep();
     }
   }
-}
-
-// modified regex from  https://stackoverflow.com/questions/161738/what-is-the-best-regular-expression-to-check-if-a-string-is-a-valid-url#comment19948615_163684
-const urlRegex = /^(https?):\/\/[\-A-Za-z0-9+&@#\/%?=~_|!:,.;]*[\-A-Za-z0-9+&@#\/%=~_|]$/;
-function calculateScore(manner) {
-  const score = gameState.grade + gameState.friends * 20 + gameState.studySAT * 2 + gameState.accumulativeDay * 50;
-  let scores = localStorage.getItem(SCORES_COOKIE_NAME);
-  if (scores) scores = JSON.parse(scores);
-  else scores = [];
-  scores.push([Math.round(score), new Date().toISOString(), manner]);
-  localStorage.setItem(SCORES_COOKIE_NAME, JSON.stringify(scores));
-  let urlInput, submitBtn, error;
-  return [
-    span('', `Score: ${Math.round(score)}; survived ${gameState.accumulativeDay} day(s)`),
-    '\n\n',
-    'You can submit your score to the global leaderboard; just identify yourself using a URL to your website or social media/Schoology profile. Make sure the URL contains the protocol (eg http or https). Your public IP address will be stored but won\'t be publicized.\n\nURL: ',
-    urlInput = input('', 'https://'),
-    ' ',
-    submitBtn = span('button', '[submit]', () => {
-      if (urlRegex.test(urlInput.value)) {
-        submitBtn.classList.add('disabled');
-        fetch('https://test-9d9aa.firebaseapp.com/newScore', {
-          headers: { 'Content-Type': 'application/json; charset=utf-8' },
-          method: 'POST',
-          body: JSON.stringify({
-            score: stringifyScore(Math.round(score)),
-            friends: stringifyScore(Math.round(gameState.friends)),
-            accumulativeDay: stringifyScore(Math.round(gameState.accumulativeDay)),
-            time: new Date().toISOString(),
-            url: urlInput.value,
-            manner: manner
-          })
-        }).then(res => {
-          if (res.status === 200) {
-            window.location = './leaderboard.html';
-          } else {
-            return Promise.reject();
-          }
-        }).catch(() => {
-          error.textContent = '\n\nThere was a problem submitting the score. You might have to try again.';
-          submitBtn.classList.remove('disabled');
-        });
-      } else {
-        error.textContent = '\n\nYour URL doesn\'t seem valid.';
-      }
-    }),
-    error = span('error')
-  ];
 }
 
 function schoolContinue() {
   return new Promise(res => gameState.continueResolve = res);
 }
+
 async function assembly(lines, customHeading = 'ASSEMBLY') {
   let skip = false, skipBtn;
   renderer.schoolContent.appendChild(createFragment([
@@ -180,6 +104,28 @@ async function assembly(lines, customHeading = 'ASSEMBLY') {
   }
   skipBtn.classList.add('disabled');
 }
+
+async function triggerChoiceEvent(promptText, options) {
+  let resolve, promise = new Promise(res => resolve = res);
+  renderer.schoolContBtn.classList.add('disabled');
+  
+  const optionElements = options.map((opt, index) => 
+    span('button', `[${opt.label}]`, () => resolve(index))
+  );
+
+  const fragContent = [span('', promptText), '\n'];
+  optionElements.forEach(el => fragContent.push(' ', el));
+  fragContent.push('\n\n');
+
+  renderer.schoolContent.appendChild(createFragment(fragContent));
+  
+  const choiceIndex = await promise;
+  renderer.schoolContBtn.classList.remove('disabled');
+  optionElements.forEach(el => el.classList.add('disabled'));
+  
+  return options[choiceIndex].action();
+}
+
 async function beginSchool() {
   disableBtn(renderer.studySATBtn, 'You\'re at school!');
   disableBtn(renderer.doHWBtn, 'You\'re at school!');
@@ -187,6 +133,59 @@ async function beginSchool() {
   if (renderer.studyBtn) disableBtn(renderer.studyBtn, 'You\'re at school!');
   if (gameState.scolded) gameState.scolded = false;
   gameState.accumulativeDay++;
+
+  // 100-day Win Condition check
+  if (gameState.accumulativeDay >= 100) {
+    while (document.body.children.length) {
+      if (document.body.lastChild !== this.floatingBar)
+        document.body.removeChild(document.body.lastChild);
+      else break;
+    }
+    document.body.appendChild(createFragment([
+      renderer.schoolContent = span(),
+      renderer.schoolContBtn = span('button', '[ok]', clicks.schoolContinue)
+    ]));
+    await assembly([
+      '--: You have successfully survived 100 days at school!',
+      '--: You are ready to take on whatever comes next.'
+    ], 'GRADUATION');
+    document.body.removeChild(renderer.schoolContBtn);
+    document.body.appendChild(createFragment([
+      span('the-end', 'YOU WIN! (100 DAYS SURVIVED)'),
+      '\n\n',
+      span('button', '[play again]', clicks.reload)
+    ]));
+    return;
+  }
+
+  // Interactive Daily Events System
+  const interactiveEvents = {
+    10: async () => {
+      await triggerChoiceEvent(
+        "Someone left their lunch money on the cafeteria table. What do you do?",
+        [
+          { label: "Keep it (+2% grade)", action: () => { gameState.grade = Math.min(100, gameState.grade + 2); } },
+          { label: "Give it to a worker (+1 Friend)", action: () => { gameState.friends++; } },
+          { label: "Ignore it", action: () => {} }
+        ]
+      );
+    },
+    50: async () => {
+      await triggerChoiceEvent(
+        "Midterms are approaching fast. How do you study?",
+        [
+          { label: "Cram all night (+30 Test Readiness, -1 Sleep)", action: () => { gameState.testReadiness += 30; gameState.sleeplessNights++; } },
+          { label: "Study normally (+10 Test Readiness)", action: () => { gameState.testReadiness += 10; } }
+        ]
+      );
+    }
+  };
+
+  if (interactiveEvents[gameState.accumulativeDay]) {
+    await interactiveEvents[gameState.accumulativeDay]();
+  }
+  
+
   if (gameState.accumulativeDay === 1) {
     document.body.insertBefore(createFragment([
       ' ',
@@ -198,7 +197,7 @@ async function beginSchool() {
     document.body.appendChild(createFragment([
       '\n\n',
       renderer.school = span('', [
-        span('school-heading', 'GUNN'),
+        span('school-heading', 'SCHOOL'),
         '\n',
         renderer.schoolContent = span(),
         renderer.schoolContBtn = span('button', '[ok]', clicks.schoolContinue)
@@ -222,7 +221,7 @@ async function beginSchool() {
     await schoolContinue();
   } else if (gameState.absences === 3 && !gameState.warned) {
     renderer.schoolContent.appendChild(createFragment([
-      span('', 'The school pulled you out of class to warn you about your absence during SELF and how you can work on improving your attendance. They make it clear that five unexcused absences will lead to suspension.' + (gameState.tests ? ' You end up missing your test(s) from the talks and you\'ll have to take them tomorrow.' : '')),
+      span('', 'The school pulled you out of class to warn you about your absence during the wellness program. They make it clear that five unexcused absences will lead to suspension.' + (gameState.tests ? ' You end up missing your test(s) from the talks and you\'ll have to take them tomorrow.' : '')),
       '\n'
     ]));
     testsToRetake = gameState.tests;
@@ -237,8 +236,6 @@ async function beginSchool() {
       '\n\n',
       span('the-end', 'GAME OVER'),
       '\n\n',
-      ...calculateScore('suspended'),
-      '\n\n',
       span('button', '[try again]', clicks.reload)
     ]));
     renderer.schoolContBtn.classList.add('hidden');
@@ -249,18 +246,11 @@ async function beginSchool() {
     return;
   } else if (!gameState.reported && gameState.avgSleepLength < 3 && Math.random() < 0.2) {
     renderer.schoolContent.appendChild(createFragment([
-      span('', 'The school pulled you out of class to interrogate you because apparently one student reported you simply for looking depressed; perhaps you should\'ve slept more. The school says that they will periodically pull you out of class to check on you in the future.' + (gameState.tests ? ' You end up missing your test(s) from the talks and you\'ll have to take them tomorrow.' : '')),
+      span('', 'The school pulled you out of class to interrogate you because one student reported you for looking exhausted.' + (gameState.tests ? ' You end up missing your test(s) from the talks and you\'ll have to take them tomorrow.' : '')),
       '\n'
     ]));
     testsToRetake = gameState.tests;
     gameState.reported = true;
-    await schoolContinue();
-  } else if (gameState.reported && Math.random() < 0.2) {
-    renderer.schoolContent.appendChild(createFragment([
-      span('', 'The school pulled you out of class to check in with your "depression."' + (gameState.tests ? ' You end up missing your test(s) from the talks and you\'ll have to take them tomorrow.' : '')),
-      '\n'
-    ]));
-    testsToRetake = gameState.tests;
     await schoolContinue();
   } else {
     for (let i = 0; i < gameState.tests - gameState.retakeTests; i++) {
@@ -290,13 +280,8 @@ async function beginSchool() {
     ]), renderer.testStudyMarker);
   } else if (gameState.accumulativeDay === 2) {
     await assembly([
-      '--: ██████████ and ██████ wave to the audience.',
-      'cc: ██████████: Good morning! We are hard at work on a new fun extension to SELF for you guys to help you reduce stress.',
-      'tf: ██████: We plan to introduce this program tomorrow, so stay tuned!',
-      'cc: ██████████: However, today we will give you a brief preview of what is to come!',
-      'tf: ██████: Friendships are extremely important, even more important that your schoolwork.',
-      'cc: ██████████: That is why today, we are giving you guys a challenge: maintain at least THREE friendships! Most of you already have three friends, so this should not be hard.',
-      'tf: ██████: Do note that friendships require MAINTENANCE. However, we will be concerned if you do not satisfy this minimum.'
+      '--: Representatives wave to the audience.',
+      'cc: Good morning! Today, we are giving you a challenge: maintain at least THREE friendships!'
     ]);
     document.body.insertBefore(createFragment([
       ' ',
@@ -306,34 +291,15 @@ async function beginSchool() {
     ]), renderer.gradeMarker);
   } else if (gameState.accumulativeDay === 3) {
     await assembly([
-      '--: ██████████ and ██████ wave to the audience.',
-      'cc: ██████████: Good morning! Yesterday, we hinted at our destressing program that we have been working on for the last few months.',
-      'tf: ██████: Today is the day! We are proud to announce to you... after-school SELF!',
-      '--: The students do not react positively to this.',
-      'cc: ██████████: Come on! You will enjoy this program for sure! This program is currently mandatory for sophomores only, but other grades are free to join in as well!',
-      'tf: ██████: This SELF session is only an hour long, and then you are free to leave!'
+      '--: Representatives wave to the audience.',
+      'cc: Today we are proud to announce our after-school wellness program!'
     ]);
     gameState.self = true;
-  } else if (gameState.day === 4) {
-    gameState.selfLength++;
-    if (Math.random() < 0.5) {
-      await assembly([
-        '--: ██████████ and ██████ wave to the audience.',
-        `cc: ██████████: Good morning! Since we\'ve noticed how much you guys loved the after-school SELF program, we\'re now making it ${gameState.selfLength} hours long!`
-      ]);
-    } else {
-      gameState.friendExpectation++;
-      await assembly([
-        '--: ██████████ and ██████ wave to the audience.',
-        `tf: ██████: Good morning! With your newfound skills in relationship maintenance and friendship building, we\'re now raising our expectations! We now expect each of you to have at least ${gameState.friendExpectation} friends.`
-      ]);
-      renderer.friends.dataset.title = `You need a minimum of ${gameState.friendExpectation} friends.`;
-    }
   }
-  gameState.hwRate += 0.7;
+  gameState.hwRate += 0.3;
   gameState.homeworks += Math.floor(gameState.hwRate);
   renderer.hwCount.textContent = gameState.homeworks;
-  gameState.tests = Math.floor(Math.random() * gameState.hwRate) + testsToRetake;
+  gameState.tests = Math.floor(Math.random() * (gameState.hwRate/2)) + testsToRetake;
   renderer.tests.textContent = gameState.tests;
   let tempReadiness = gameState.testReadiness;
   gameState.testReadiness = 0;
@@ -349,7 +315,7 @@ async function beginSchool() {
     let resolve, promise = new Promise(res => resolve = res), opt1, opt2;
     renderer.schoolContBtn.classList.add('disabled');
     renderer.schoolContent.appendChild(createFragment([
-      span('', `Go to after-school SELF?`),
+      span('', `Go to after-school program?`),
       '\n',
       opt1 = span('button', '[ok]', () => resolve(true)),
       ' ',
@@ -367,7 +333,7 @@ async function beginSchool() {
       if (gameState.absences === 0) {
         document.body.insertBefore(createFragment([
           ' ',
-          span('absences-heading', 'ABSENCES', null, 'SELF teaches the most important and practical skills you need for life, so don\'t dare you miss it!'),
+          span('absences-heading', 'ABSENCES', null, 'Don\'t miss the program!'),
           ' ',
           renderer.absences = span('absences', '0', null, 'Warning at 3 absences, suspension at 5.')
         ]), renderer.gradeMarker);
@@ -376,86 +342,56 @@ async function beginSchool() {
       renderer.absences.textContent = gameState.absences;
     }
   }
-  if (gameState.friends < gameState.friendExpectation && Math.random() < 0.5) {
+  if (gameState.friends === 0 && gameState.grade < 70) {
     renderer.schoolContent.appendChild(createFragment([
-      span('', 'The school is worried about your social life and is requiring you stay for another hour to learn more about forming and maintaining friendships.'),
-      '\n\n'
-    ]));
-    addHours(1);
-    hoursLeft--;
-  }
-  if (gameState.retakeTests) {
-    if (gameState.retakeTests > hoursLeft) { // not enough time for retakes :O
-      testsToRetake += gameState.retakeTests - hoursLeft;
-      gameState.tests += gameState.retakeTests - hoursLeft;
-      renderer.tests.textContent = gameState.tests;
-      gameState.retakeTests = hoursLeft;
-    }
-    renderer.schoolContent.appendChild(createFragment([
-      span('', `You spend ${gameState.retakeTests} hour(s) after school to retake tests.`),
+      '\n',
+      span('parents-heading', 'CRISIS POINT'),
       '\n'
     ]));
-    addHours(gameState.retakeTests);
-    hoursLeft -= gameState.retakeTests;
-    for (let i = 0; i < gameState.retakeTests; i++) {
-      const threshold = Math.random() * 50 + 25;
-      const score = Math.min(100, tempReadiness + 100 - threshold);
-      gameState.grade = (gameState.grade * gameState.testsTaken + score) / (gameState.testsTaken + 1);
-      renderer.grade.textContent = Math.round(gameState.grade * 100) / 100;
-      gameState.testsTaken++;
-      renderer.schoolContent.appendChild(createFragment([
-        span('', `You receive ${Math.round(score * 100) / 100}% on a test.`),
-        '\n'
-      ]));
-      await schoolContinue();
-    }
-  }
-  gameState.retakeTests = testsToRetake;
-  if (renderer.friends && gameState.friends) {
-    let resolve, promise = new Promise(res => resolve = res), opt1, opt2;
-    renderer.schoolContBtn.classList.add('disabled');
-    renderer.schoolContent.appendChild(createFragment([
-      span('friend-request', `Your friends want you to hang out with them for ${gameState.friends} hour(s).`),
-      '\n',
-      opt1 = span('button', '[ok]', () => resolve(true)),
-      ' ',
-      opt2 = span('button', '[no]', () => resolve(false)),
-      '\n\n'
-    ]));
-    const answer = await promise;
-    renderer.schoolContBtn.classList.remove('disabled');
-    opt1.classList.add('disabled');
-    opt2.classList.add('disabled');
-    if (answer) {
-      if (gameState.friends > hoursLeft) {
-        const lostFriends = gameState.friends - hoursLeft;
-        gameState.friends = hoursLeft;
-        renderer.friends.textContent = gameState.friends;
-        renderer.schoolContent.appendChild(createFragment([
-          span('', `${lostFriends} friend(s) leave you because you don't have enough time for them.`),
-          '\n'
-        ]));
-      }
-      addHours(gameState.friends);
-      const makeFriend = gameState.friends < gameState.friendExpectation || Math.random() < gameState.friends / 10;
-      renderer.schoolContent.appendChild(createFragment([
-        span('', 'You have fun with your friends, but you feel you spent too much time with them.' + (makeFriend ? ' At least you made a new friend!' : '')),
-        '\n'
-      ]));
-      if (makeFriend) {
-        gameState.friends++;
-        renderer.friends.textContent = gameState.friends;
-      }
-      await schoolContinue();
-    } else {
-      gameState.friends--;
-      renderer.friends.textContent = gameState.friends;
-      renderer.schoolContent.appendChild(createFragment([
-        span('', 'One of your friends left you because you seemed to have stopped hanging out with them.'),
-        '\n'
-      ]));
-      await schoolContinue();
-    }
+
+    await triggerChoiceEvent(
+      "You have 0 friends left and your grade has fallen below 70%. It's only going to get worse from here. What do you do?",
+      [
+        {
+          label: "Suicide",
+          action: async () => {
+            renderer.schoolContent.appendChild(createFragment([
+              '\n',
+              span('', 'The sky looks beautiful from here doesn\'t it.'),
+              '\n\n',
+              span('', 'You take a deep breath, but are stopped short by the sudden noise of footsteps on the stairs.'),
+              '\n\n',
+              span('', 'Teachers run over to stop you, but it is too late. You climb over the fence and drop down from the conservatory roof.'),
+              '\n\n',
+              span('end-msg', 'ENDING: death'),
+              '\n\n',
+              span('the-end', 'GAME OVER'),
+              '\n\n',
+              span('button', '[try again]', clicks.reload)
+            ]));
+          }
+        },
+        {
+          label: "U2Nob29sIFNob290aW5nCg==",
+          action: async () => {
+            renderer.schoolContent.appendChild(createFragment([
+              '\n',
+              span('', 'Blood spurts from a classmate\'s head. Screams echo across the classroom and spill out into the hall.'),
+              '\n\n'
+              span('', 'Your former classmates try to run, but they can\'t get very far. With you blocking the only doorway, the only way out is the realm of the Grim Reaper...'),
+              '\n\n'
+              span('', 'You move through the halls, going from classroom after classroom. They\'ll get you in the end, but what does it matter now?'),
+              '\n\n'
+              span('end-msg', 'ENDING: death'),
+              '\n\n',
+              span('the-end', 'GAME OVER'),
+              '\n\n',
+              span('button', '[try again]', clicks.reload)
+            ]));
+          }
+        }
+      ]
+    );
   }
   if (gameState.grade < 90) {
     renderer.schoolContent.appendChild(createFragment([
@@ -466,26 +402,20 @@ async function beginSchool() {
     if (gameState.grade < 80) {
       renderer.schoolContent.appendChild(createFragment([
         '\n',
-        span('', 'Your parents stand at the door, visibly disappointed and angry. Your dad shakes his head and points away.'),
+        span('', 'Your parents stand at the door, visibly disappointed and angry.'),
         '\n\n',
         span('end-msg', 'You have been disowned.'),
         '\n\n',
         span('the-end', 'GAME OVER'),
         '\n\n',
-        ...calculateScore('disowned'),
-        '\n\n',
         span('button', '[try again]', clicks.reload)
       ]));
       renderer.schoolContBtn.classList.add('hidden');
-      renderer.studySATBtn.dataset.title = 'Find a family first!';
-      renderer.doHWBtn.dataset.title = 'Find a family first!';
-      renderer.studyBtn.dataset.title = 'Find a family first!';
-      renderer.sleepBtn.dataset.title = 'Find a family first!';
       return;
     } else if (hoursLeft >= 3) {
       renderer.schoolContent.appendChild(createFragment([
         '\n',
-        span('', 'Your parents enter your room, visibly disappointed and angry. They scold you for the entire night, and you are unable to study. They make it clear that there will be worse consequences if your grades continue to drop.'),
+        span('', 'Your parents enter your room and scold you for the entire night.'),
         '\n'
       ]));
       gameState.scolded = true;
@@ -494,19 +424,9 @@ async function beginSchool() {
       await schoolContinue();
     }
   }
-  if (params['censored-name'] && hoursLeft > 0) {
-    const hours = Math.min(Math.floor(Math.random() * 6 + 1), hoursLeft);
-    renderer.schoolContent.appendChild(createFragment([
-      span('jennifer-li', `You spend ${hours} hour(s) watching dog videos on Instagram. You regret doing so.`),
-      '\n'
-    ]));
-    addHours(hours);
-    hoursLeft -= hours;
-    await schoolContinue();
-  }
   if (hoursLeft <= 0) {
     renderer.schoolContent.appendChild(createFragment([
-      span('', 'Alas, you have spent the rest of the day and night outside, and you must attend school again.'),
+      span('', 'Alas, you have spent the rest of the day and must attend school again.'),
       '\n'
     ]));
     await schoolContinue();
@@ -534,15 +454,12 @@ const clicks = {
         renderer.schoolContBtn = span('button', '[ok]', clicks.schoolContinue)
       ]));
       assembly([
-        '--: Your parents are proud of you. You have completed all the SAT/ACT preparation books, and now you can take the SAT/ACT.',
-        '--: You do pretty well (average for a Gunn student).',
-        '--: You can now leave Gunn behind.'
+        '--: You have completed all your study preparation books.',
+        '--: You can now leave school behind.'
       ], 'GRADUATION').then(() => {
         document.body.removeChild(renderer.schoolContBtn);
         document.body.appendChild(createFragment([
           span('the-end', 'YOU WIN!'),
-          '\n\n',
-          ...calculateScore('graduated'),
           '\n\n',
           span('button', '[play again]', clicks.reload)
         ]));
@@ -553,8 +470,8 @@ const clicks = {
       case 1:
         document.body.appendChild(createFragment([
           ' You are now ',
-          renderer.satPercent = span('sat-percentage', '2', null, 'If you\'re 100% ready, you can graduate high school early!'),
-          '% ready for the SAT/ACT.'
+          renderer.satPercent = span('sat-percentage', '2', null, 'Ready percentage'),
+          '% ready.'
         ]));
         break;
       case 4:
@@ -567,7 +484,7 @@ const clicks = {
           renderer.testStudyMarker = span('hidden'),
           '\n',
           renderer.sleepBtn = span('button', '[sleep]', clicks.sleep),
-          ' Don\'t forget to sleep so you do well on tests!'
+          ' Don\'t forget to sleep!'
         ]));
         gameState.homeworks += 3;
         updateHomework();
@@ -601,7 +518,7 @@ const clicks = {
     }
   },
   studyTest() {
-    gameState.testReadiness += (Math.random() * 25 + 25) / gameState.tests;
+    gameState.testReadiness += (Math.random() * 25 + 25) /gameState.tests;
     if (gameState.studySAT > 0) {
       gameState.studySAT--;
       renderer.satPercent.textContent = 100 * gameState.studySAT / config.MAX_SAT_STUDY;
@@ -617,70 +534,16 @@ const clicks = {
     renderer.dialog.classList.add('hidden');
     renderer.dialogContent.innerHTML = '';
   },
-  showScores() {
-    renderer.dialogHeading.textContent = 'SCORES';
-    let scores = localStorage.getItem(SCORES_COOKIE_NAME);
-    if (scores) scores = JSON.parse(scores);
-    if (scores && scores.length) {
-      renderer.dialogContent.appendChild(createFragment([
-        span('score-heading', 'SCORE'),
-        span('divider', ' | '),
-        span('score-heading', 'TIME'),
-        span('divider', '                     | '),
-        span('score-heading', 'MANNER'),
-        '\n',
-        ...scores.sort((a, b) => b[0] - a[0]).map(([score, time, manner]) => span('', [
-          score.toString().padStart(5),
-          span('divider', ' | '),
-          time,
-          span('divider', ' | '),
-          manner,
-          '\n'
-        ])),
-        '\n',
-        span('button', '[global leaderboard]', './leaderboard.html')
-      ]));
-    } else {
-      renderer.dialogContent.appendChild(createFragment([
-        'No failures to show.\n\n',
-        span('button', '[global leaderboard]', './leaderboard.html')
-      ]));
-    }
-  },
   showInfo() {
     renderer.dialogHeading.textContent = 'INFO';
     renderer.dialogContent.appendChild(createFragment([
-      'This game accurately portrays the life of a Gunn student. Students at Gunn must balance their social lives, academics, careers, and commitment to SELF, but to balance one would unbalance another.\n\n',
-      'To win, you need to be able to take the SAT/ACT early so that you can graduate early. However, you can only do that in your free time since homework and test studying takes priority.\n\n',
-      'Anyone may (and should) make own version of this game, though please consider crediting the creator or link to this game somewhere.\n\n',
-      span('button', '[more info]', './info.html')
-    ]));
-  },
-  showModes() {
-    renderer.dialogHeading.textContent = 'GAME MODES';
-    renderer.dialogContent.appendChild(createFragment([
-      'There are a few game modes that make small changes to the game mechanics that make the game even harder. These were suggested by experienced Gunn students.\n',
-      span('button', '[default mode]', './'),
-      ' - Play the game as the creator intended it to be played.\n',
-      span('button', '[████████ ██ mode]', './?censored-name'),
-      ' - Experience firsthand the detrimental effects of technological distractions by losing 1-6 hours every day to dog videos on Instagram, like fellow Gunn student ████████ ██.\n',
-      span('button', '[bedtime mode]', './?bedtime'),
-      ' - It is recommended to sleep at least eight hours a night; your parents care about your mental health, so they force you to sleep at 12 AM.\n',
-      '\nI probably won\'t add any more modes.'
+      'Survive 100 days of school by balancing academics, homework, and test prep.\n\n'
     ]));
   },
   showUpdates() {
     renderer.dialogHeading.textContent = 'UPDATES';
     renderer.dialogContent.appendChild(createFragment([
-      'Update 1: initial release',
-      '\n\nUpdate 2: Number of days survived is shown with score, game is better at dealing with 15 friends',
-      '\n\nUpdate 3: There\'s now a chance that a student will report you to the Administration for looking "depressed" if you don\'t sleep enough.',
-      '\n\nUpdate 4: Added a score leaderboard (not global)',
-      '\n\nUpdate 5: Added a global leaderboard; you will be given the opportunity to submit your score when the game ends.',
-      '\n\nUpdate 6: Global leaderboard now shows friend count and days (because these statistics were also sent).',
-      '\n\nUpdate 7: Law compliance.',
-      '\n\nUpdate 8: Renamed a game mode.',
-      '\n\nUpdate 9: Added a background to the footer windows and fixed a typo.'
+      'Custom 100-Day Simulator: Scores, leaderboards, and alternative modes removed.'
     ]));
   }
 };
