@@ -1,14 +1,14 @@
 const [clicks] = (() => {
 
   const config = {
-    MAX_SAT_STUDY: 50
+    MAX_Volunteer_Hour: 50
   };
 
   const gameState = {
     accumulativeDay: 0,
     day: 0,
     time: 16,
-    studySAT: 0,
+    volunteerHours: 0,
     homeworks: 0,
     hwRate: 3,
     sleeplessNights: 0,
@@ -20,7 +20,7 @@ const [clicks] = (() => {
     friendExpectation: 3,
     continueResolve: null,
     scolded: false,
-    totalSAT: 0,
+    totalVolunteerHours: 0,
     absences: 0,
     warned: false,
     retakeTests: 0,
@@ -31,7 +31,7 @@ const [clicks] = (() => {
     teacherCaught: false,
     cheatingGCArc: false,
     cheatingRoyArc: false,
-    
+    wokeness: 50,
   
   };
 
@@ -71,13 +71,13 @@ const [clicks] = (() => {
     if (renderer.tests) {
       renderer.tests.textContent = gameState.tests;
       renderer.testReadiness.textContent = Math.round(gameState.testReadiness * 100) / 100;
-      if (gameState.tests) enableBtn(renderer.studyBtn);
-      else disableBtn(renderer.studyBtn, 'You don\'t have a test tomorrow!');
+      if (gameState.tests) enableBtn(renderer.volunteerBtn);
+      else disableBtn(renderer.volunteerBtn, 'You don\'t have a test tomorrow!');
     }
     if (gameState.tests && gameState.testReadiness < 50) {
-      disableBtn(renderer.studySATBtn, 'You should at least be 50% prepared for your test!');
+      disableBtn(renderer.volunteerBtn, 'You should at least be 50% prepared for your test!');
     } else {
-      enableBtn(renderer.studySATBtn);
+      enableBtn(renderer.volunteerBtn);
     }
     if (gameState.homeworks === 0) {
       disableBtn(renderer.doHWBtn, 'No more homework!');
@@ -85,7 +85,7 @@ const [clicks] = (() => {
       enableBtn(renderer.doHWBtn);
     }
     if (gameState.scolded) {
-      disableBtn(renderer.studySATBtn, 'You cannot concentrate because your parents are scolding you.');
+      disableBtn(renderer.volunteerBtn, 'You cannot concentrate because your parents are scolding you.');
       disableBtn(renderer.studyBtn, 'You cannot concentrate because your parents are scolding you.');
     }
   }
@@ -158,7 +158,7 @@ const [clicks] = (() => {
   }
 
   async function beginSchool() {
-    disableBtn(renderer.studySATBtn, 'You\'re at school!');
+    disableBtn(renderer.volunteerBtn, 'You\'re at school!');
     disableBtn(renderer.doHWBtn, 'You\'re at school!');
     disableBtn(renderer.sleepBtn, 'You\'re at school!');
     if (renderer.studyBtn) disableBtn(renderer.studyBtn, 'You\'re at school!');
@@ -177,14 +177,96 @@ const [clicks] = (() => {
         renderer.schoolContent = span(),
         renderer.schoolContBtn = span('button', '[ok]', clicks.schoolContinue)
       ]));
-      const satScore = 800 + (gameState.studySAT * 16);
-      const finalGPA = Math.round(gameState.grade *100)/100;
+
+      // --- VOLUNTEER HOUR PENALTY CHECK ---
+      if (gameState.volunteerHours < 25) {
+        gameState.grade -= 20;
+        renderer.schoolContent.appendChild(createFragment([
+          span('', 'WARNING: You failed to complete the required 25 volunteer hours. Your final grade drops by 20%!'),
+          '\n\n'
+        ]));
+        await schoolContinue();
+      }
+
+     if (gameState.friends === 0 && gameState.grade < 70) {
+        renderer.schoolContent.appendChild(createFragment([
+          span('parents-heading', 'CRISIS POINT'),
+          '\n\n'
+        ]));
+        await triggerChoiceEvent(
+          "With the volunteer penalty dropping your grade below 70% and having 0 friends left, everything crashes down on graduation day. What do you do?",
+          [
+            {
+              label: "Suicide",
+              action: async () => {
+                renderer.schoolContent.appendChild(createFragment([
+                  '\n',
+                  span('', 'The sky looks beautiful from here doesn\'t it.'),
+                  '\n\n',
+                  span('', 'You take a deep breath, but are stopped short by the sudden noise of footsteps on the stairs.'),
+                  '\n\n',
+                  span('', 'Teachers run over to stop you, but it is too late. You climb over the fence and fall down from the conservatory roof.'),
+                  '\n\n',
+                  span('end-msg', 'ENDING: death'),
+                  '\n\n',
+                  span('the-end', 'GAME OVER'),
+                  '\n\n',
+                  span('button', '[try again]', clicks.reload)
+                ]));
+              }
+            },
+            {
+              label: "U2Nob29sIFNob290aW5nCg==",
+              action: async () => {
+                renderer.schoolContent.appendChild(createFragment([
+                  '\n',
+                  span('', 'Blood spurts from a classmate\'s head. Screams echo across the classroom and spill out into the hall.'),
+                  '\n\n',
+                  span('', 'Your former classmates try to run, but they can\'t get very far. With you blocking the only doorway, the only way out is the realm of the Grim Reaper...'),
+                  '\n\n',
+                  span('', 'You move through the halls, going from classroom after classroom. They\'ll get you in the end, but what does it matter now?'),
+                  '\n\n',
+                  span('end-msg', 'ENDING: death'),
+                  '\n\n',
+                  span('the-end', 'GAME OVER'),
+                  '\n\n',
+                  span('button', '[try again]', clicks.reload)
+                ]));
+              }
+            }
+          ]
+        );
+        return;
+      }
+
+      // 2. Check for DISOWNMENT next (Grade < 80%)
+      if (gameState.grade < 80) {
+        renderer.schoolContent.appendChild(createFragment([
+          span('parents-heading', 'HOME'),
+          '\n\n',
+          span('', 'Your parents inspect your final report card after the volunteer penalty... and stand at the door, visibly disappointed and angry.'),
+          '\n\n',
+          span('end-msg', 'You have been disowned.'),
+          '\n\n',
+          span('the-end', 'GAME OVER'),
+          '\n\n',
+          span('button', '[try again]', clicks.reload)
+        ]));
+        renderer.schoolContBtn.classList.add('hidden');
+        return;
+      }
+
+      // win
+      const finalGPA = Math.round(gameState.grade * 100) / 100;
+      const finalHours = gameState.volunteerHours;
+
       await assembly([
         '--: You have successfully survived 100 days at VCS school!',
-        '--: Final Academic Grade: ${finalGPA}%',
-        '--: SAT score: ${satScore} / 1600',
+        `--: Final Academic Grade: ${finalGPA}%`,
+        `--: Total Volunteer Hours: ${finalHours} hrs`,
         '--: You are ready to take on whatever comes next.'
       ], 'GRADUATION');
+
       document.body.removeChild(renderer.schoolContBtn);
       document.body.appendChild(createFragment([
         span('the-end', 'YOU WIN! (100 DAYS SURVIVED)'),
@@ -409,9 +491,9 @@ const [clicks] = (() => {
         span('button', '[try again]', clicks.reload)
       ]));
       renderer.schoolContBtn.classList.add('hidden');
-      renderer.studySATBtn.dataset.title = 'You aren\'t in school anymore!';
+      renderer.volunteerBtn.dataset.title = 'You aren\'t in school anymore!';
       renderer.doHWBtn.dataset.title = 'You aren\'t in school anymore!';
-      if (renderer.studyBtn) renderer.studyBtn.dataset.title = 'You aren\'t in school anymore!';
+      if (renderer.volunteerBtn) renderer.volunteerBtn.dataset.title = 'You aren\'t in school anymore!';
       renderer.sleepBtn.dataset.title = 'You aren\'t in school anymore!';
       if (renderer.skipClassBtn) renderer.skipClassBtn.dataset.title = 'You aren\'t in school anymore!';
       return;
@@ -455,7 +537,7 @@ const [clicks] = (() => {
     if (gameState.accumulativeDay === 1) {
       document.body.insertBefore(createFragment([
         '\n',
-        renderer.studyBtn = span('button disabled', '[study for tests]', clicks.studyTest, 'You\'re at school!'),
+        renderer.volunteerBtn = span('button disabled', '[volunteer]', clicks.volunteer, 'You\'re at school!'),
         ' You are ',
         renderer.testReadiness = span('test-readiness', '0'),
         '% ready for ',
@@ -597,23 +679,24 @@ const [clicks] = (() => {
 
   // ========== CLICK HANDLERS ==========
   const clicks = {
-    studySAT() {
-      if (gameState.studySAT < config.MAX_SAT_STUDY) {
-        gameState.studySAT++;
-        gameState.totalSAT++;
+    volunteer() {
+      if (gameState.volunteerHours < config.MAX_Volunteer_Hour) {
+        gameState.volunteerHours++;
+        gameState.totalVolunteerHours++;
       }
-      switch (gameState.totalSAT) {
+      switch (gameState.totalVolunteerHours) {
         case 1:
           document.body.appendChild(createFragment([
-            ' You are now ',
-            renderer.satPercent = span('sat-percentage', '2', null, 'Ready percentage'),
-            '% ready.'
+            ' You have completed ',
+            renderer.volunteerPercent = span('volunteer-percentage', '2', null, 'Volunteer Hours Progress'),
+            ' hours of community service.'
           ]));
           break;
         case 4:
           document.body.appendChild(createFragment([
             '\n',
             renderer.doHWBtn = span('button', '[do homework]', clicks.doHW),
+            renderer.volunteerBtn = span('button', '[volunteer]', clicks.volunteer),
             ' You have ',
             renderer.hwCount = span('homework-count', ''),
             ' homework assignment(s) due.',
@@ -630,8 +713,8 @@ const [clicks] = (() => {
           renderer.timeWrapper.classList.remove('hidden');
           break;
       }
-      if (renderer.satPercent){
-        renderer.satPercent.textContent = 100 * gameState.studySAT / config.MAX_SAT_STUDY;
+      if (renderer.volunteerPercent){
+        renderer.volunteerPercent.textContent = 100 * gameState.volunteerHours / config.MAX_Volunteer_Hour;
       }
       addHours(1, true);
     },
@@ -681,9 +764,9 @@ const [clicks] = (() => {
 
     studyTest() {
       gameState.testReadiness += (Math.random() * 25 + 25) / gameState.tests;
-      if (gameState.studySAT > 0) {
-        gameState.studySAT--;
-        renderer.satPercent.textContent = 100 * gameState.studySAT / config.MAX_SAT_STUDY;
+      if (gameState.volunteerHours > 0) {
+        gameState.volunteerHours--;
+        renderer.volunteerPercent.textContent = 100 * gameState.volunteerHours / config.MAX_Volunteer_Hour;
       }
       updateHomework();
       addHours(1, true);
