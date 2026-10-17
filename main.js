@@ -179,10 +179,10 @@ const [clicks] = (() => {
       ]));
 
       // --- VOLUNTEER HOUR PENALTY CHECK ---
-      if (gameState.volunteerHours < 25) {
+      if (gameState.volunteerHours < 50) {
         gameState.grade -= 20;
         renderer.schoolContent.appendChild(createFragment([
-          span('', 'WARNING: You failed to complete the required 25 volunteer hours. Your final grade drops by 20%!'),
+          span('', 'WARNING: You failed to complete the required 50 volunteer hours. Your final grade drops by 20%!'),
           '\n\n'
         ]));
         await schoolContinue();
@@ -194,7 +194,7 @@ const [clicks] = (() => {
           '\n\n'
         ]));
         await triggerChoiceEvent(
-          "With the volunteer penalty dropping your grade below 70% and having 0 friends left, everything crashes down on graduation day. What do you do?",
+          "With the volunteer penalty dropping your grade below 70% and having 0 friends left, everything crashes down on graduation day. There are only two ways this can end.",
           [
             {
               label: "Suicide",
@@ -205,7 +205,7 @@ const [clicks] = (() => {
                   '\n\n',
                   span('', 'You take a deep breath, but are stopped short by the sudden noise of footsteps on the stairs.'),
                   '\n\n',
-                  span('', 'Teachers run over to stop you, but it is too late. You climb over the fence and fall down from the conservatory roof.'),
+                  span('', 'Teachers run over to stop you, but it is too late. You climb over the barrier and fall down from the conservatory roof.'),
                   '\n\n',
                   span('end-msg', 'ENDING: death'),
                   '\n\n',
@@ -220,7 +220,7 @@ const [clicks] = (() => {
               action: async () => {
                 renderer.schoolContent.appendChild(createFragment([
                   '\n',
-                  span('', 'Blood spurts from a classmate\'s head. Screams echo across the classroom and spill out into the hall.'),
+                  span('', 'Blood spurts from a students\'s head. Screams echo across the classroom and spill out into the hall.'),
                   '\n\n',
                   span('', 'Your former classmates try to run, but they can\'t get very far. With you blocking the only doorway, the only way out is the realm of the Grim Reaper...'),
                   '\n\n',
@@ -322,7 +322,24 @@ const [clicks] = (() => {
           gameState.homeworks += 1;
               
       },
-      3: async () => {
+      14: async () => {
+        if (gameState.cheatingRoyArc = true){
+          renderer.schoolContent.appendChild(createFragment([
+            span('', 'The admin found out that Roy Shin was cheating. He ended up snitching on you, and you get expelled.')
+            '\n\n',
+            span('end-msg', 'You have been suspended.'),
+            '\n\n',
+            span('the-end', 'GAME OVER'),
+            '\n\n',
+            span('button', '[try again]', clicks.reload)
+      ]));
+          renderer.schoolContBtn.classList.add('hidden');
+          renderer.volunteerBtn.dataset.title = 'You aren\'t in school anymore!';
+          renderer.doHWBtn.dataset.title = 'You aren\'t in school anymore!';
+          if (renderer.volunteerBtn) renderer.volunteerBtn.dataset.title = 'You aren\'t in school anymore!';
+          renderer.sleepBtn.dataset.title = 'You aren\'t in school anymore!';
+          if (renderer.skipClassBtn) renderer.skipClassBtn.dataset.title = 'You aren\'t in school anymore!';
+          return;
         await triggerChoiceEvent(
           "",
           [
