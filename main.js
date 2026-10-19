@@ -75,9 +75,6 @@ window.gameState= gameState;
       if (renderer.studyBtn) {
         disableBtn(renderer.studyBtn, 'You cannot concentrate because your parents are scolding you.');
       }
-      if (renderer.doHWBtn) {
-        disableBtn(renderer.doHWBtn, 'You cannot concentrate because your parents are scolding you.');
-      }
     }
 
     updateVolunteerAvailability();
@@ -301,7 +298,7 @@ window.gameState= gameState;
         renderer.schoolContent.appendChild(createFragment([
           span('parents-heading', 'HOME'),
           '\n\n',
-          span('', 'Your parents inspect your final report card after the volunteer penalty... and stand at the door, visibly disappointed and angry.'),
+          span('', 'Your parents inspect your final report card... and stand at the door, visibly disappointed and angry.'),
           '\n\n',
           span('end-msg', 'You have been disowned.'),
           '\n\n',
@@ -534,19 +531,26 @@ window.gameState= gameState;
     }
 
     gameState.hwRate += 0.3;
-    gameState.homeworks += Math.floor(gameState.hwRate);
+
+
+    const hwGain = Math.min(10, Math.floor(gameState.hwRate));
+    gameState.homeworks += hwGain;
     if (renderer.hwCount) renderer.hwCount.textContent = gameState.homeworks;
-    gameState.tests = Math.floor(Math.random() * (gameState.hwRate / 2)) + testsToRetake;
+
+    gameState.tests = Math.floor(Math.random() * 6) + testsToRetake;
     if (renderer.tests) renderer.tests.textContent = gameState.tests;
+
     gameState.testReadiness = 0;
     if (renderer.testReadiness) renderer.testReadiness.textContent = gameState.testReadiness;
 
     renderer.schoolContent.appendChild(createFragment([
-      span('', `You leave school with ${Math.floor(gameState.hwRate)} more homework assignment(s) and ${gameState.tests} test(s) to prepare for tomorrow.`),
+      span('', `You leave school with ${hwGain} more homework assignment(s) and ${gameState.tests} test(s) to prepare for tomorrow.`),
       '\n\n'
     ]));
     await schoolContinue();
     addHours(8);
+
+
 
     let hoursLeft = Math.ceil((gameState.time - 8) / 24) * 24 + 8 - gameState.time;
 
