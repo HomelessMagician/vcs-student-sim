@@ -445,22 +445,32 @@ window.gameState= gameState;
     renderer.grade.textContent = Math.round(gameState.grade * 100) / 100;
 
     if (gameState.accumulativeDay === 2) {
-        await assembly([
-          '--: Representatives wave to the audience.',
-          'cc: Good morning! Today, we are giving you a challenge: maintain at least THREE friendships!'
-        ]);
-        if (renderer.grade && renderer.grade.parentNode) {
-          renderer.grade.parentNode.insertBefore(
-            createFragment([
-              ' ',
-              span('friend-heading', 'FRIENDS'),
-              ' ',
-              renderer.friends = span('friends', String(gameState.friends), null, 'You need a minimum of 3 friends.')
-            ]),
-            renderer.grade.nextSibling
-          );
-        }
+      await assembly([
+        '--: Representatives wave to the audience.',
+        'cc: Good morning! Today, we are giving you a challenge: maintain at least THREE friendships!'
+      ]);
+    
+      if (renderer.grade && renderer.grade.parentNode) {
+        // grade node, then text node "%", then we want FRIENDS
+        const percentNode = renderer.grade.nextSibling; // the '%'
+        const insertBeforeNode = percentNode ? percentNode.nextSibling : null;
+    
+        renderer.grade.parentNode.insertBefore(
+          createFragment([
+            ' ',
+            span('friend-heading', 'FRIENDS'),
+            ' ',
+            renderer.friends = span(
+              'friends',
+              String(gameState.friends),
+              null,
+              'You need a minimum of 3 friends.'
+            )
+          ]),
+          insertBeforeNode
+        );
       }
+    }
 
     gameState.hwRate += 0.3;
     gameState.homeworks += Math.floor(gameState.hwRate);
