@@ -5,18 +5,18 @@ function init() {
     this.floatingBar = span('floating', [
       renderer.dialog = span('dialog hidden', [
         renderer.dialogHeading = span('dialog-heading', ''),
-        renderer.closeBtn = span('button close-button disabled', '[close]', clicks.closeDialog),
+        renderer.closeBtn = span('button close-button disabled', '[close]', window.clicks.closeDialog),
         '\n',
         renderer.dialogContent = span()
       ]),
       '\n',
-      span('button info-button', '[scores]', openDialog(clicks.showScores)),
+      span('button info-button', '[scores]', openDialog(window.clicks.showScores)),
       ' ',
-      span('button info-button', '[info]', openDialog(clicks.showInfo)),
+      span('button info-button', '[info]', openDialog(window.clicks.showInfo)),
       ' ',
-      span('button info-button', '[modes]', openDialog(clicks.showModes)),
+      span('button info-button', '[modes]', openDialog(window.clicks.showModes)),
       ' ',
-      span('button info-button', '[updates]', openDialog(clicks.showUpdates)),
+      span('button info-button', '[updates]', openDialog(window.clicks.showUpdates)),
       ' ',
       span('button info-button', '[source]', 'https://github.com/SheepTester/gunn-student-sim/')
     ]),
