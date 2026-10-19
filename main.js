@@ -38,29 +38,53 @@ const [clicks] = (() => {
 
 window.gameState= gameState;
 
-  // ========== GAME FUNCTIONS ==========
+
 
   function updateHomework() {
-    renderer.hwCount.textContent = gameState.homeworks;
+    if (renderer.hwCount) {
+      renderer.hwCount.textContent = gameState.homeworks;
+    }
     if (renderer.tests) {
       renderer.tests.textContent = gameState.tests;
-      renderer.testReadiness.textContent = Math.round(gameState.testReadiness * 100) / 100;
-      if (gameState.tests) enableBtn(renderer.volunteerBtn);
-      else disableBtn(renderer.volunteerBtn, 'You don\'t have a test tomorrow!');
     }
-    if (gameState.tests && gameState.testReadiness < 50) {
-      disableBtn(renderer.volunteerBtn, 'You should at least be 50% prepared for your test!');
-    } else {
+    if (renderer.testReadiness) {
+      renderer.testReadiness.textContent =
+        Math.round(gameState.testReadiness * 100) / 100;
+    }
+
+    // Homework
+    if (renderer.doHWBtn) {
+      if (gameState.homeworks === 0) {
+        disableBtn(renderer.doHWBtn, 'No more homework!');
+      } else {
+        enableBtn(renderer.doHWBtn);
+      }
+    }
+
+    // Study for tests
+    if (renderer.studyBtn) {
+      if (!gameState.tests) {
+        disableBtn(renderer.studyBtn, 'You don\'t have a test tomorrow!');
+      } else {
+        enableBtn(renderer.studyBtn);
+      }
+    }
+
+    // Volunteer is always available (unless scolded)
+    if (renderer.volunteerBtn) {
       enableBtn(renderer.volunteerBtn);
     }
-    if (gameState.homeworks === 0) {
-      disableBtn(renderer.doHWBtn, 'No more homework!');
-    } else {
-      enableBtn(renderer.doHWBtn);
-    }
+
     if (gameState.scolded) {
-      disableBtn(renderer.volunteerBtn, 'You cannot concentrate because your parents are scolding you.');
-      disableBtn(renderer.studyBtn, 'You cannot concentrate because your parents are scolding you.');
+      if (renderer.volunteerBtn) {
+        disableBtn(renderer.volunteerBtn, 'You cannot concentrate because your parents are scolding you.');
+      }
+      if (renderer.studyBtn) {
+        disableBtn(renderer.studyBtn, 'You cannot concentrate because your parents are scolding you.');
+      }
+      if (renderer.doHWBtn) {
+        disableBtn(renderer.doHWBtn, 'You cannot concentrate because your parents are scolding you.');
+      }
     }
   }
 
@@ -331,13 +355,15 @@ window.gameState= gameState;
     }
 
     if (gameState.accumulativeDay === 1) {
-      document.body.insertBefore(createFragment([
-        ' ',
-        span('grade-heading', 'GRADE'),
-        ' ',
-        renderer.grade = span('grade', '100', null, 'Must be at least 90%'),
-        '%'
-      ]), renderer.gradeMarker);
+      if (!renderer.grade) {
+        document.body.insertBefore(createFragment([
+          ' ',
+          span('grade-heading', 'GRADE'),
+          ' ',
+          renderer.grade = span('grade', '100', null, 'Must be at least 90%'),
+          '%'
+        ]), renderer.gradeMarker);
+      }
       document.body.appendChild(createFragment([
         '\n\n',
         renderer.school = span('', [
@@ -348,8 +374,10 @@ window.gameState= gameState;
         ])
       ]));
     } else {
-      renderer.school.classList.remove('hidden');
-      enableBtn(renderer.schoolContBtn);
+      if (renderer.school) {
+        renderer.school.classList.remove('hidden');
+        enableBtn(renderer.schoolContBtn);
+      }
     }
 
     let testsToRetake = 0;
@@ -543,11 +571,17 @@ window.gameState= gameState;
     }
 
     updateHomework();
-    enableBtn(renderer.sleepBtn);
+
+    if (renderer.volunteerBtn) enableBtn(renderer.volunteerBtn);
+    if (renderer.doHWBtn) enableBtn(renderer.doHWBtn);
+    if (renderer.sleepBtn) enableBtn(renderer.sleepBtn);
     if (renderer.skipClassBtn) enableBtn(renderer.skipClassBtn);
-    renderer.school.classList.add('hidden');
-    disableBtn(renderer.schoolContBtn);
-    renderer.schoolContent.innerHTML = '';
+    if (renderer.studyBtn) enableBtn(renderer.studyBtn);
+
+    if (renderer.school) renderer.school.classList.add('hidden');
+    if (renderer.schoolContBtn) disableBtn(renderer.schoolContBtn);
+    if (renderer.schoolContent) renderer.schoolContent.innerHTML = '';
+
     if (hoursLeft <= 0) addHours(0, true);
   }
 
@@ -570,7 +604,7 @@ window.gameState= gameState;
           break;
       }
       if (renderer.volunteerPercent){
-        renderer.volunteerPercent.textContent = 100 * gameState.volunteerHours / config.MAX_Volunteer_Hour;
+        renderer.volunteerPercent.textContent = String(gameState.totalVolunteerHours);
       }
       addHours(1, true);
     },
@@ -619,13 +653,14 @@ window.gameState= gameState;
     },
 
     studyTest() {
-      gameState.testReadiness += (Math.random() * 25 + 25) / gameState.tests;
-      if (gameState.volunteerHours > 0) {
-        gameState.volunteerHours--;
-        renderer.volunteerPercent.textContent = 100 * gameState.volunteerHours / config.MAX_Volunteer_Hour;
+    if (!gameState.tests) return;
+    gameState.testReadiness += (Math.random() * 25 + 25) / gameState.tests;
+    if (renderer.testReadiness) {
+      renderer.testReadiness.textContent =
+        Math.round(gameState.testReadiness * 100) / 100;
       }
-      updateHomework();
       addHours(1, true);
+      updateHomework();
     },
 
     reload() {
@@ -721,6 +756,8 @@ window.gameState= gameState;
       '% ready for ',
       renderer.tests = span('upcoming-tests', '0'),
       ' test(s) tomorrow.',
+      '\n',
+      renderer.studyBtn = span('button', '[study for tests]', clicks.studyTest),
       '\n',
       renderer.doHWBtn = span('button', '[do homework]', clicks.doHW),
       ' You have ',
