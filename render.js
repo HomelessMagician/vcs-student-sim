@@ -26,7 +26,6 @@ function init() {
       renderer.day = span('day', 'MONDAY')
     ]),
     renderer.gradeMarker = span('hidden'),
-    '\n',
-    renderer.studySATBtn = span('button', '[study for SAT/ACT]', clicks.studySAT)
+    '\n'
   ]));
 }
