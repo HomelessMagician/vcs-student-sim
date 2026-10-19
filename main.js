@@ -77,7 +77,7 @@ window.gameState= gameState;
         } else {
           gameState.avgSleepLength = gameState.avgSleepLength * gameState.accumulativeDay / (gameState.accumulativeDay + 1);
         }
-        beginSchool();
+        ();
       }
     }
   }
@@ -132,13 +132,15 @@ window.gameState= gameState;
   }
 
   async function beginSchool() {
-    disableBtn(renderer.volunteerBtn, 'You\'re at school!');
-    disableBtn(renderer.doHWBtn, 'You\'re at school!');
-    disableBtn(renderer.sleepBtn, 'You\'re at school!');
+
+    if (renderer.volunteerBtn) disableBtn(renderer.volunteerBtn, 'You\'re at school!');
+    if (renderer.doHWBtn) disableBtn(renderer.doHWBtn, 'You\'re at school!');
+    if (renderer.sleepBtn) disableBtn(renderer.sleepBtn, 'You\'re at school!');
     if (renderer.studyBtn) disableBtn(renderer.studyBtn, 'You\'re at school!');
     if (renderer.skipClassBtn) disableBtn(renderer.skipClassBtn, 'You\'re at school!');
     if (gameState.scolded) gameState.scolded = false;
     gameState.accumulativeDay++;
+  // ... rest of the function stays the same
 
     // 100-day Win Condition
     if (gameState.accumulativeDay >= 100) {
