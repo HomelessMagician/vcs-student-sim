@@ -36,39 +36,7 @@ const [clicks] = (() => {
   };
 
 
-// =========== CLICKABLE GENDER SELECTOR ===========
-function selectGender() {
-  return new Promise(resolve => {
-    const showPrompt = () => {
-      const contentArea = document.getElementById('school-content') || document.body;
-      contentArea.innerHTML = `
-        <div style="font-size: 1.4em; margin-bottom: 20px; color: white;">Select your gender:</div>
-        <div style="margin-top: 15px;">
-          <span class="button" id="gender-male" style="cursor:pointer; margin-right:12px; padding: 5px 10px; background: #444; border: 1px solid #777; color: white;">[Male]</span>
-          <span class="button" id="gender-female" style="cursor:pointer; margin-right:12px; padding: 5px 10px; background: #444; border: 1px solid #777; color: white;">[Female]</span>
-        </div>
-      `;
-
-      document.getElementById('gender-male').onclick = () => {
-        gameState.gender = 'male';
-        contentArea.innerHTML = '';
-        resolve();
-      };
-
-      document.getElementById('gender-female').onclick = () => {
-        gameState.gender = 'female';
-        contentArea.innerHTML = '';
-        resolve();
-      };
-    };
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', showPrompt);
-    } else {
-      showPrompt();
-    }
-  });
-}
+window.gameState= gameState;
 
   // ========== GAME FUNCTIONS ==========
 
