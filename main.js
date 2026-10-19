@@ -323,9 +323,9 @@ const [clicks] = (() => {
               
       },
       14: async () => {
-        if (gameState.cheatingRoyArc = true){
+        if (gameState.cheatingRoyArc === true){
           renderer.schoolContent.appendChild(createFragment([
-            span('', 'The admin found out that Roy Shin was cheating. He ended up snitching on you, and you get expelled.')
+            span('', 'The admin found out that Roy Shin was cheating. He ended up snitching on you, and you get expelled.'),
             '\n\n',
             span('end-msg', 'You have been suspended.'),
             '\n\n',
@@ -340,123 +340,15 @@ const [clicks] = (() => {
           renderer.sleepBtn.dataset.title = 'You aren\'t in school anymore!';
           if (renderer.skipClassBtn) renderer.skipClassBtn.dataset.title = 'You aren\'t in school anymore!';
           return;
-        await triggerChoiceEvent(
-          "",
-          [
-            { label: "", action: () => { ; } },
-            { label: "", action: () => { ; } }
-          ]
-        );
+        else {
+          renderer.schoolContent.appendChild(createFragment([
+            span('', 'Rumors spread of a group that knows all the test answers. You gain some info from listening to conversations.'),
+            '\n\n',
+          ]));
+
+          gameState.testReadiness += 15;
+
       },
-      3: async () => {
-        await triggerChoiceEvent(
-          "",
-          [
-            { label: "", action: () => { ; } },
-            { label: "", action: () => { ; } }
-          ]
-        );
-      },
-      3: async () => {
-        await triggerChoiceEvent(
-          "",
-          [
-            { label: "", action: () => { ; } },
-            { label: "", action: () => { ; } }
-          ]
-        );
-      },
-      3: async () => {
-        await triggerChoiceEvent(
-          "",
-          [
-            { label: "", action: () => { ; } },
-            { label: "", action: () => { ; } }
-          ]
-        );
-      },
-      3: async () => {
-        await triggerChoiceEvent(
-          "",
-          [
-            { label: "", action: () => { ; } },
-            { label: "", action: () => { ; } }
-          ]
-        );
-      },
-      3: async () => {
-        await triggerChoiceEvent(
-          "",
-          [
-            { label: "", action: () => { ; } },
-            { label: "", action: () => { ; } }
-          ]
-        );
-      },
-      3: async () => {
-        await triggerChoiceEvent(
-          "",
-          [
-            { label: "", action: () => { ; } },
-            { label: "", action: () => { ; } }
-          ]
-        );
-      },
-      3: async () => {
-        await triggerChoiceEvent(
-          "",
-          [
-            { label: "", action: () => { ; } },
-            { label: "", action: () => { ; } }
-          ]
-        );
-      },
-      3: async () => {
-        await triggerChoiceEvent(
-          "",
-          [
-            { label: "", action: () => { ; } },
-            { label: "", action: () => { ; } }
-          ]
-        );
-      },
-      3: async () => {
-        await triggerChoiceEvent(
-          "",
-          [
-            { label: "", action: () => { ; } },
-            { label: "", action: () => { ; } }
-          ]
-        );
-      },
-      3: async () => {
-        await triggerChoiceEvent(
-          "",
-          [
-            { label: "", action: () => { ; } },
-            { label: "", action: () => { ; } }
-          ]
-        );
-      },
-      3: async () => {
-        await triggerChoiceEvent(
-          "",
-          [
-            { label: "", action: () => { ; } },
-            { label: "", action: () => { ; } }
-          ]
-        );
-      },
-      3: async () => {
-        await triggerChoiceEvent(
-          "",
-          [
-            { label: "", action: () => { ; } },
-            { label: "", action: () => { ; } }
-          ]
-        );
-      },
-      
     };
 
     if (interactiveEvents[gameState.accumulativeDay]) {
