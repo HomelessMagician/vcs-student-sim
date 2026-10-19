@@ -300,7 +300,7 @@ window.gameState= gameState;
         renderer.schoolContent.appendChild(createFragment([
           span('parents-heading', 'HOME'),
           '\n\n',
-          span('', 'Your parents inspect your final report card... and stand at the door, visibly disappointed and angry.'),
+          span('', 'Your parents inspect your final report card... and stand at the door, visibly disappointed and angry. Your dad shakes his head and points away.'),
           '\n\n',
           span('end-msg', 'You have been disowned.'),
           '\n\n',
@@ -309,6 +309,10 @@ window.gameState= gameState;
           span('button', '[try again]', clicks.reload)
         ]));
         renderer.schoolContBtn.classList.add('hidden');
+        renderer.volunteerBtn.dataset.title = 'Find a family first!';
+        renderer.doHWBtn.dataset.title = 'Find a family first!';
+        renderer.studyBtn.dataset.title = 'Find a family first!';
+        renderer.sleepBtn.dataset.title = 'Find a family first!';
         return;
       }
 
@@ -619,7 +623,7 @@ window.gameState= gameState;
       if (gameState.grade < 80) {
         renderer.schoolContent.appendChild(createFragment([
           '\n',
-          span('', 'Your parents stand at the door, visibly disappointed and angry.'),
+          span('', 'Your parents stand at the door, visibly disappointed and angry. Your dad shakes his head and points away.'),
           '\n\n',
           span('end-msg', 'You have been disowned.'),
           '\n\n',
@@ -628,11 +632,15 @@ window.gameState= gameState;
           span('button', '[try again]', clicks.reload)
         ]));
         renderer.schoolContBtn.classList.add('hidden');
+        renderer.volunteerBtn.dataset.title = 'Find a family first!';
+        renderer.doHWBtn.dataset.title = 'Find a family first!';
+        renderer.studyBtn.dataset.title = 'Find a family first!';
+        renderer.sleepBtn.dataset.title = 'Find a family first!';
         return;
       } else if (hoursLeft >= 3) {
         renderer.schoolContent.appendChild(createFragment([
           '\n',
-          span('', 'Your parents enter your room and scold you for the entire night.'),
+          span('', 'Your parents enter your room, visibly disappointed and angry. They scold you for the entire night, and you are unable to study. They make it clear that there will be worse consequences if your grades continue to drop.'),
           '\n'
         ]));
         gameState.scolded = true;
