@@ -65,6 +65,8 @@ window.gameState= gameState;
     if (renderer.studyBtn) {
       if (!gameState.tests) {
         disableBtn(renderer.studyBtn, 'You don\'t have a test tomorrow!');
+      } else if (gameState.testReadiness >= 100) {
+        disableBtn(renderer.studyBtn, 'You are already 100% ready for your tests!');
       } else {
         enableBtn(renderer.studyBtn);
       }
@@ -709,6 +711,9 @@ window.gameState= gameState;
     studyTest() {
     if (!gameState.tests) return;
     gameState.testReadiness += (Math.random() * 25 + 25) / gameState.tests;
+    if (gameState.testReadiness > 100) {
+        gameState.testReadiness = 100;
+      }  
     if (renderer.testReadiness) {
       renderer.testReadiness.textContent =
         Math.round(gameState.testReadiness * 100) / 100;
