@@ -537,7 +537,7 @@ window.gameState= gameState;
     gameState.homeworks += hwGain;
     if (renderer.hwCount) renderer.hwCount.textContent = gameState.homeworks;
 
-    gameState.tests = Math.floor(Math.random() * 6) + testsToRetake;
+    gameState.tests = Math.floor(Math.random() * 5) + testsToRetake;
     if (renderer.tests) renderer.tests.textContent = gameState.tests;
 
     gameState.testReadiness = 0;
