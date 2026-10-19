@@ -28,6 +28,8 @@ function init() {
       renderer.day = span('day', 'MONDAY')
     ]),
     renderer.gradeMarker = span('hidden')
+    
 
   ]));
+  if (window.startGame) window.startGame();
 }
