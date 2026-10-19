@@ -347,6 +347,7 @@ const [clicks] = (() => {
           ]));
 
           gameState.testReadiness += 15;
+        }
 
       },
     };
