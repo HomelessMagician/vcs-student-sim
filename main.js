@@ -716,10 +716,6 @@ window.gameState= gameState;
     ' ',
     renderer.grade = span('grade', '100', null, 'Must be at least 90%'),
     '%',
-    '\n',
-    span('', 'You have completed '),
-    renderer.volunteerPercent = span('volunteer-percentage', '0'),
-    span('', ' hours of community service.')
   ]), renderer.gradeMarker);
 
   renderer.time.textContent = humanTime(gameState.time % 24);
