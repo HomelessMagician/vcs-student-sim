@@ -34,9 +34,9 @@ function init() {
     '\n',
     span('', 'Select your gender:'),
     '\n\n',
-    span('button', '[Male]', () => finishGenderSelection('male')),
-    '   ',
-    span('button', '[Female]', () => finishGenderSelection('female'))
+    span('button', '[Male]', () => finishGenderSelection('male'), '', { style: 'display: inline-block; margin-right: 15px;' }),
+    span('button', '[Female]', () => finishGenderSelection('female'), '', { style: 'display: inline-block;' }),
+    '\n\n'
   ]));
 }
 function finishGenderSelection(gender) {
