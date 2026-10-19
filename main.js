@@ -680,28 +680,30 @@ window.gameState= gameState;
   };
 
   async function selectGender() {
-    document.body.appendChild(createFragment([
-      '\n\n',
-      renderer.school = span('', [
-        span('school-heading', 'CHARACTER CREATION'),
-        '\n',
-        renderer.schoolContent = span(),
-        renderer.schoolContBtn = span('button', '[ok]')
-      ])
-    ]));
+  document.body.appendChild(createFragment([
+    '\n\n',
+    renderer.school = span('', [
+      span('school-heading', 'CHARACTER CREATION'),
+      '\n',
+      renderer.schoolContent = span(),
+      renderer.schoolContBtn = span('button hidden', '[ok]')
+    ])
+  ]));
 
-    renderer.school.classList.remove('hidden');
-    await triggerChoiceEvent(
-      "Select your gender:",
-      [
-        { label: "Male", action: () => { gameState.gender = 'male'; } },
-        { label: "Female", action: () => { gameState.gender = 'female'; } }
-      ]
-    );
+  // Make sure the school container is visible!
+  renderer.school.classList.remove('hidden');
 
-    renderer.schoolContent.innerHTML = '';
-    renderer.school.classList.add('hidden');
-  }
+  await triggerChoiceEvent(
+    "Select your gender:",
+    [
+      { label: "Male", action: () => { gameState.gender = 'male'; } },
+      { label: "Female", action: () => { gameState.gender = 'female'; } }
+    ]
+  );
+
+  renderer.schoolContent.innerHTML = '';
+  renderer.school.classList.add('hidden');
+}
   // Start with gender selection
   selectGender().then(() => {
     gameState.accumulativeDay = 0;
