@@ -320,7 +320,7 @@ const [clicks] = (() => {
             "\n\n"
           ]));
           gameState.homeworks += 1;
-              
+        }     
       },
       14: async () => {
         if (gameState.cheatingRoyArc === true){
@@ -709,10 +709,14 @@ const [clicks] = (() => {
 
   // Start with gender selection
   selectGender().then(() => {
-    // Gender has been selected — game is ready
-    // (Most initialization happens when the player starts studying)
-  });
+  document.body.innerHTML = '';
+  gameState.accumulativeDay = 0;
+  beginSchool(); // Triggers the first day and builds the UI elements!
+});
 
-  return [clicks];
+// Expose clicks globally so render.js can access it
+window.clicks = clicks;
+
+return [clicks];
 
 })();
