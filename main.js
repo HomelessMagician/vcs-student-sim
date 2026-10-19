@@ -140,7 +140,7 @@ window.gameState= gameState;
     if (renderer.skipClassBtn) disableBtn(renderer.skipClassBtn, 'You\'re at school!');
     if (gameState.scolded) gameState.scolded = false;
     gameState.accumulativeDay++;
-  // ... rest of the function stays the same
+
 
     // 100-day Win Condition
     if (gameState.accumulativeDay >= 100) {
@@ -418,17 +418,7 @@ window.gameState= gameState;
     gameState.grade -= gameState.homeworks;
     renderer.grade.textContent = Math.round(gameState.grade * 100) / 100;
 
-    if (gameState.accumulativeDay === 1) {
-      document.body.insertBefore(createFragment([
-        '\n',
-        renderer.volunteerBtn = span('button disabled', '[volunteer]', clicks.volunteer, 'You\'re at school!'),
-        ' You are ',
-        renderer.testReadiness = span('test-readiness', '0'),
-        '% ready for ',
-        renderer.tests = span('upcoming-tests', '0'),
-        ' test(s) tomorrow.'
-      ]), renderer.testStudyMarker);
-    } else if (gameState.accumulativeDay === 2) {
+    if (gameState.accumulativeDay === 2) {
       await assembly([
         '--: Representatives wave to the audience.',
         'cc: Good morning! Today, we are giving you a challenge: maintain at least THREE friendships!'
@@ -721,13 +711,60 @@ window.gameState= gameState;
     renderer.schoolContent = null;
     renderer.schoolContBtn = null;
   }
+  function startAfterSchoolDay1() {
+    // Still day 0 of survival until they finish first night → first school morning
+    gameState.accumulativeDay = 0;
+    gameState.time = 16; // 4:00 PM
+    gameState.homeworks = 3; // starting homework load
+    gameState.tests = 0;
+    gameState.testReadiness = 0;
+  
+    // Grade display
+    document.body.insertBefore(createFragment([
+      ' ',
+      span('grade-heading', 'GRADE'),
+      ' ',
+      renderer.grade = span('grade', '100', null, 'Must be at least 90%'),
+      '%'
+    ]), renderer.gradeMarker);
+  
+    // Time
+    renderer.time.textContent = humanTime(gameState.time % 24);
+    renderer.day.textContent = dayNames[gameState.day];
+    renderer.timeWrapper.classList.remove('hidden');
+  
+    // Home actions (enabled — you're after school)
+    document.body.appendChild(createFragment([
+      '\n',
+      renderer.volunteerBtn = span('button', '[volunteer]', clicks.volunteer),
+      ' You are ',
+      renderer.testReadiness = span('test-readiness', '0'),
+      '% ready for ',
+      renderer.tests = span('upcoming-tests', '0'),
+      ' test(s) tomorrow.',
+      '\n',
+      renderer.doHWBtn = span('button', '[do homework]', clicks.doHW),
+      ' You have ',
+      renderer.hwCount = span('homework-count', String(gameState.homeworks)),
+      ' homework assignment(s) due.',
+      renderer.testStudyMarker = span('hidden'),
+      '\n',
+      renderer.sleepBtn = span('button', '[sleep]', clicks.sleep),
+      ' Don\'t forget to sleep!',
+      '\n',
+      renderer.skipClassBtn = span('button', '[skip class]', clicks.skipClass,
+        'Skip the entire school day (counts as an absence)')
+    ]));
+  
+    updateHomework();
+  }
+
 
   window.clicks = clicks;
 
   window.startGame = function () {
     selectGender().then(() => {
-      gameState.accumulativeDay = 0;
-      beginSchool();
+      startAfterSchoolDay1();
     });
   };
 
