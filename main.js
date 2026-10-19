@@ -676,7 +676,7 @@ window.gameState= gameState;
       renderer.dialogContent.appendChild(createFragment([
         '• Removed after-school wellness program (SELF)\n• Added [skip class] button\n• Absence / suspension system restored\n• Gender selector is now clickable'
       ]));
-    }
+    },
     showScores() {
       renderer.dialogHeading.textContent = 'SCORES';
       renderer.dialogContent.appendChild(createFragment([
@@ -688,8 +688,8 @@ window.gameState= gameState;
       renderer.dialogContent.appendChild(createFragment([
         'No extra modes yet.'
       ]));
-    },
-  };
+    }
+};
 
 async function selectGender() {
   document.body.appendChild(createFragment([
