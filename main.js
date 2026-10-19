@@ -679,18 +679,18 @@ window.gameState= gameState;
     }
   };
 
-  async function selectGender() {
+async function selectGender() {
   document.body.appendChild(createFragment([
     '\n\n',
     renderer.school = span('', [
       span('school-heading', 'CHARACTER CREATION'),
       '\n',
       renderer.schoolContent = span(),
-      renderer.schoolContBtn = span('button hidden', '[ok]')
+      renderer.schoolContBtn = span('button', '[ok]')
     ])
   ]));
 
-  // Make sure the school container is visible!
+  // Ensure the school container is visible
   renderer.school.classList.remove('hidden');
 
   await triggerChoiceEvent(
