@@ -161,7 +161,6 @@ window.gameState= gameState;
     if (renderer.doHWBtn) disableBtn(renderer.doHWBtn, 'You\'re at school!');
     if (renderer.sleepBtn) disableBtn(renderer.sleepBtn, 'You\'re at school!');
     if (renderer.studyBtn) disableBtn(renderer.studyBtn, 'You\'re at school!');
-    if (renderer.skipClassBtn) disableBtn(renderer.skipClassBtn, 'You\'re at school!');
     if (gameState.scolded) gameState.scolded = false;
     gameState.accumulativeDay++;
 
@@ -575,9 +574,7 @@ window.gameState= gameState;
     if (renderer.volunteerBtn) enableBtn(renderer.volunteerBtn);
     if (renderer.doHWBtn) enableBtn(renderer.doHWBtn);
     if (renderer.sleepBtn) enableBtn(renderer.sleepBtn);
-    if (renderer.skipClassBtn) enableBtn(renderer.skipClassBtn);
     if (renderer.studyBtn) enableBtn(renderer.studyBtn);
-
     if (renderer.school) renderer.school.classList.add('hidden');
     if (renderer.schoolContBtn) disableBtn(renderer.schoolContBtn);
     if (renderer.schoolContent) renderer.schoolContent.innerHTML = '';
@@ -592,22 +589,14 @@ window.gameState= gameState;
         gameState.volunteerHours++;
         gameState.totalVolunteerHours++;
       }
-      switch (gameState.totalVolunteerHours) {
-        case 1:
-          document.body.appendChild(createFragment([
-            ' You have completed ',
-            renderer.volunteerPercent = span('volunteer-percentage', '2', null, 'Volunteer Hours Progress'),
-            ' hours of community service.'
-          ]));
-          break;
-        case 4:
-          break;
-      }
-      if (renderer.volunteerPercent){
+      if (renderer.volunteerPercent) {
         renderer.volunteerPercent.textContent = String(gameState.totalVolunteerHours);
       }
       addHours(1, true);
+      updateHomework();
     },
+
+
 
     doHW() {
       gameState.homeworks--;
@@ -616,34 +605,20 @@ window.gameState= gameState;
     },
 
     sleep() {
-      const sleepLength = Math.ceil((gameState.time - 8) / 24) * 24 + 8 - gameState.time;
-      addHours(sleepLength);
-      gameState.sleeplessNights = 0;
-      if (gameState.accumulativeDay === 0) {
-        gameState.avgSleepLength = sleepLength;
-      } else {
-        gameState.avgSleepLength = (gameState.avgSleepLength * gameState.accumulativeDay + sleepLength) / (gameState.accumulativeDay + 1);
+    const sleepLength = Math.ceil((gameState.time - 8) / 24) * 24 + 8 - gameState.time;
+    gameState.sleeplessNights = 0;
+    if (gameState.accumulativeDay === 0) {
+      gameState.avgSleepLength = sleepLength;
+    } else {
+      gameState.avgSleepLength =
+        (gameState.avgSleepLength * gameState.accumulativeDay + sleepLength) /
+        (gameState.accumulativeDay + 1);
       }
+      // advance time, then one school day
+      addHours(sleepLength); // no atHome
       beginSchool();
     },
 
-    skipClass() {
-      if (!renderer.absences) {
-        document.body.insertBefore(createFragment([
-          ' ',
-          span('absences-heading', 'ABSENCES', null, 'Don\'t skip too many classes!'),
-          ' ',
-          renderer.absences = span('absences', '0', null, 'Warning at 3 absences, suspension at 5.')
-        ]), renderer.gradeMarker);
-      }
-
-      gameState.absences++;
-      renderer.absences.textContent = gameState.absences;
-
-      const hoursUntilMorning = Math.ceil((gameState.time - 8) / 24) * 24 + 8 - gameState.time;
-      addHours(hoursUntilMorning + 8);
-      beginSchool();
-    },
 
     schoolContinue() {
       if (gameState.continueResolve) {
@@ -730,50 +705,51 @@ window.gameState= gameState;
   }
 
   function startAfterSchoolDay1() {
-    gameState.accumulativeDay = 0;
-    gameState.time = 16; // 4:00 PM
-    gameState.homeworks = 3;
-    gameState.tests = 0;
-    gameState.testReadiness = 0;
+  gameState.accumulativeDay = 0;
+  gameState.time = 16;
+  gameState.homeworks = 3;
+  gameState.tests = 0;
+  gameState.testReadiness = 0;
 
-    document.body.insertBefore(createFragment([
-      ' ',
-      span('grade-heading', 'GRADE'),
-      ' ',
-      renderer.grade = span('grade', '100', null, 'Must be at least 90%'),
-      '%'
-    ]), renderer.gradeMarker);
+  document.body.insertBefore(createFragment([
+    ' ',
+    span('grade-heading', 'GRADE'),
+    ' ',
+    renderer.grade = span('grade', '100', null, 'Must be at least 90%'),
+    '%',
+    '\n',
+    span('', 'You have completed '),
+    renderer.volunteerPercent = span('volunteer-percentage', '0'),
+    span('', ' hours of community service.')
+  ]), renderer.gradeMarker);
 
-    renderer.time.textContent = humanTime(gameState.time % 24);
-    renderer.day.textContent = dayNames[gameState.day];
-    renderer.timeWrapper.classList.remove('hidden');
+  renderer.time.textContent = humanTime(gameState.time % 24);
+  renderer.day.textContent = dayNames[gameState.day];
+  renderer.timeWrapper.classList.remove('hidden');
 
-    document.body.appendChild(createFragment([
-      '\n',
-      renderer.volunteerBtn = span('button', '[volunteer]', clicks.volunteer),
-      ' You are ',
-      renderer.testReadiness = span('test-readiness', '0'),
-      '% ready for ',
-      renderer.tests = span('upcoming-tests', '0'),
-      ' test(s) tomorrow.',
-      '\n',
-      renderer.studyBtn = span('button', '[study for tests]', clicks.studyTest),
-      '\n',
-      renderer.doHWBtn = span('button', '[do homework]', clicks.doHW),
-      ' You have ',
-      renderer.hwCount = span('homework-count', '3'),
-      ' homework assignment(s) due.',
-      renderer.testStudyMarker = span('hidden'),
-      '\n',
-      renderer.sleepBtn = span('button', '[sleep]', clicks.sleep),
-      ' Don\'t forget to sleep!',
-      '\n',
-      renderer.skipClassBtn = span('button', '[skip class]', clicks.skipClass,
-        'Skip the entire school day (counts as an absence)')
-    ]));
+  document.body.appendChild(createFragment([
+    '\n',
+    renderer.volunteerBtn = span('button', '[volunteer]', clicks.volunteer),
+    ' You are ',
+    renderer.testReadiness = span('test-readiness', '0'),
+    '% ready for ',
+    renderer.tests = span('upcoming-tests', '0'),
+    ' test(s) tomorrow.',
+    '\n',
+    renderer.studyBtn = span('button', '[study for tests]', clicks.studyTest),
+    '\n',
+    renderer.doHWBtn = span('button', '[do homework]', clicks.doHW),
+    ' You have ',
+    renderer.hwCount = span('homework-count', '3'),
+    ' homework assignment(s) due.',
+    renderer.testStudyMarker = span('hidden'),
+    '\n',
+    renderer.sleepBtn = span('button', '[sleep]', clicks.sleep),
+    ' Don\'t forget to sleep!'
+  ]));
 
-    updateHomework();
-  }
+  updateHomework();
+}
 
   window.clicks = clicks;
 
