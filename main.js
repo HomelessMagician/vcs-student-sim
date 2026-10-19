@@ -723,7 +723,6 @@ window.gameState= gameState;
   renderer.timeWrapper.classList.remove('hidden');
 
   document.body.appendChild(createFragment([
-    '\n',
     renderer.volunteerBtn = span('button', '[volunteer]', clicks.volunteer),
     '\n',
     span('', 'You have completed '),
