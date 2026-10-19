@@ -35,10 +35,12 @@ const [clicks] = (() => {
   
   };
 
-  // ========== CLICKABLE GENDER SELECTOR ==========
-  function selectGender() {
-    return new Promise(resolve => {
-      document.body.innerHTML = '';
+
+function selectGender() {
+  return new Promise(resolve => {
+    const initGenderUI = () => {
+      const targetBody = document.body || document.documentElement;
+      targetBody.innerHTML = '';
 
       const container = document.createElement('div');
       container.style.cssText = 'padding: 40px; font-family: monospace; line-height: 1.8;';
@@ -51,7 +53,7 @@ const [clicks] = (() => {
         </div>
       `;
 
-      document.body.appendChild(container);
+      targetBody.appendChild(container);
 
       document.getElementById('gender-male').onclick = () => {
         gameState.gender = 'male';
@@ -61,8 +63,15 @@ const [clicks] = (() => {
         gameState.gender = 'female';
         resolve();
       };
-    });
-  }
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initGenderUI);
+    } else {
+      initGenderUI();
+    }
+  });
+}
 
   // ========== GAME FUNCTIONS ==========
 
