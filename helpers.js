@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.body.innerHTML = '';
   document.body.appendChild(hoverText);
   init();
+  if (window.startGame) window.startGame();
 }, {once: true});
 
 const dayNames = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
