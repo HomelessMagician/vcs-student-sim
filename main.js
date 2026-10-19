@@ -433,11 +433,11 @@ window.gameState= gameState;
 
     gameState.hwRate += 0.3;
     gameState.homeworks += Math.floor(gameState.hwRate);
-    renderer.hwCount.textContent = gameState.homeworks;
+    if (renderer.hwCount) renderer.hwCount.textContent = gameState.homeworks;
     gameState.tests = Math.floor(Math.random() * (gameState.hwRate / 2)) + testsToRetake;
-    renderer.tests.textContent = gameState.tests;
+    if (renderer.tests) renderer.tests.textContent = gameState.tests;
     gameState.testReadiness = 0;
-    renderer.testReadiness.textContent = gameState.testReadiness;
+    if (renderer.testReadiness) renderer.testReadiness.textContent = gameState.testReadiness;
 
     renderer.schoolContent.appendChild(createFragment([
       span('', `You leave school with ${Math.floor(gameState.hwRate)} more homework assignment(s) and ${gameState.tests} test(s) to prepare for tomorrow.`),
@@ -711,15 +711,14 @@ window.gameState= gameState;
     renderer.schoolContent = null;
     renderer.schoolContBtn = null;
   }
+
   function startAfterSchoolDay1() {
-    // Still day 0 of survival until they finish first night → first school morning
     gameState.accumulativeDay = 0;
     gameState.time = 16; // 4:00 PM
-    gameState.homeworks = 3; // starting homework load
+    gameState.homeworks = 3;
     gameState.tests = 0;
     gameState.testReadiness = 0;
-  
-    // Grade display
+
     document.body.insertBefore(createFragment([
       ' ',
       span('grade-heading', 'GRADE'),
@@ -727,13 +726,11 @@ window.gameState= gameState;
       renderer.grade = span('grade', '100', null, 'Must be at least 90%'),
       '%'
     ]), renderer.gradeMarker);
-  
-    // Time
+
     renderer.time.textContent = humanTime(gameState.time % 24);
     renderer.day.textContent = dayNames[gameState.day];
     renderer.timeWrapper.classList.remove('hidden');
-  
-    // Home actions (enabled — you're after school)
+
     document.body.appendChild(createFragment([
       '\n',
       renderer.volunteerBtn = span('button', '[volunteer]', clicks.volunteer),
@@ -745,7 +742,7 @@ window.gameState= gameState;
       '\n',
       renderer.doHWBtn = span('button', '[do homework]', clicks.doHW),
       ' You have ',
-      renderer.hwCount = span('homework-count', String(gameState.homeworks)),
+      renderer.hwCount = span('homework-count', '3'),
       ' homework assignment(s) due.',
       renderer.testStudyMarker = span('hidden'),
       '\n',
@@ -755,10 +752,9 @@ window.gameState= gameState;
       renderer.skipClassBtn = span('button', '[skip class]', clicks.skipClass,
         'Skip the entire school day (counts as an absence)')
     ]));
-  
+
     updateHomework();
   }
-
 
   window.clicks = clicks;
 
