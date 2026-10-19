@@ -1,4 +1,4 @@
-const clicks = window.clicks;
+
 
 function init() {
   document.body.appendChild(createFragment([
