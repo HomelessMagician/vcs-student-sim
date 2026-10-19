@@ -337,7 +337,6 @@ window.gameState= gameState;
           renderer.doHWBtn.dataset.title = 'You aren\'t in school anymore!';
           if (renderer.volunteerBtn) renderer.volunteerBtn.dataset.title = 'You aren\'t in school anymore!';
           renderer.sleepBtn.dataset.title = 'You aren\'t in school anymore!';
-          if (renderer.skipClassBtn) renderer.skipClassBtn.dataset.title = 'You aren\'t in school anymore!';
           return;
         }
 
@@ -406,7 +405,6 @@ window.gameState= gameState;
       renderer.doHWBtn.dataset.title = 'You aren\'t in school anymore!';
       if (renderer.volunteerBtn) renderer.volunteerBtn.dataset.title = 'You aren\'t in school anymore!';
       renderer.sleepBtn.dataset.title = 'You aren\'t in school anymore!';
-      if (renderer.skipClassBtn) renderer.skipClassBtn.dataset.title = 'You aren\'t in school anymore!';
       return;
     } else if (gameState.sleeplessNights > 2 && gameState.tests) {
       renderer.schoolContent.appendChild(createFragment([
