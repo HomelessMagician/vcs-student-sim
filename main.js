@@ -309,10 +309,10 @@ window.gameState= gameState;
           span('button', '[try again]', clicks.reload)
         ]));
         renderer.schoolContBtn.classList.add('hidden');
-        renderer.volunteerBtn.dataset.title = 'Find a family first!';
-        renderer.doHWBtn.dataset.title = 'Find a family first!';
-        renderer.studyBtn.dataset.title = 'Find a family first!';
-        renderer.sleepBtn.dataset.title = 'Find a family first!';
+        if (renderer.volunteerBtn) disableBtn(renderer.volunteerBtn, 'Find a family first!');
+        if (renderer.doHWBtn) disableBtn(renderer.doHWBtn, 'Find a family first!');
+        if (renderer.studyBtn) disableBtn(renderer.studyBtn, 'Find a family first!');
+        if (renderer.sleepBtn) disableBtn(renderer.sleepBtn, 'Find a family first!');
         return;
       }
 
@@ -632,10 +632,10 @@ window.gameState= gameState;
           span('button', '[try again]', clicks.reload)
         ]));
         renderer.schoolContBtn.classList.add('hidden');
-        renderer.volunteerBtn.dataset.title = 'Find a family first!';
-        renderer.doHWBtn.dataset.title = 'Find a family first!';
-        renderer.studyBtn.dataset.title = 'Find a family first!';
-        renderer.sleepBtn.dataset.title = 'Find a family first!';
+        if (renderer.volunteerBtn) disableBtn(renderer.volunteerBtn, 'Find a family first!');
+        if (renderer.doHWBtn) disableBtn(renderer.doHWBtn, 'Find a family first!');
+        if (renderer.studyBtn) disableBtn(renderer.studyBtn, 'Find a family first!');
+        if (renderer.sleepBtn) disableBtn(renderer.sleepBtn, 'Find a family first!');
         return;
       } else if (hoursLeft >= 3) {
         renderer.schoolContent.appendChild(createFragment([
