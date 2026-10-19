@@ -686,10 +686,11 @@ window.gameState= gameState;
         span('school-heading', 'CHARACTER CREATION'),
         '\n',
         renderer.schoolContent = span(),
-        renderer.schoolContBtn = span('button hidden', '[ok]')
+        renderer.schoolContBtn = span('button', '[ok]')
       ])
     ]));
 
+    renderer.school.classList.remove('hidden');
     await triggerChoiceEvent(
       "Select your gender:",
       [
