@@ -392,7 +392,7 @@ window.gameState= gameState;
       }
       renderer.grade.textContent = Math.round(gameState.grade * 100) / 100;
       await schoolContinue();
-    } else if (!gameState.reported && gameState.avgSleepLength < 3 && Math.random() < 0.2) {
+    } else if (!gameState.reported && gameState.avgSleepLength != null && gameState.avgSleepLength < 3 && Math.random() < 0.2) {
       renderer.schoolContent.appendChild(createFragment([
         span('', 'The school pulled you out of class because a student reported you for looking exhausted.' + (gameState.tests ? ' You miss your test(s) and will have to take them tomorrow.' : '')),
         '\n'
@@ -693,42 +693,44 @@ window.gameState= gameState;
     }
 };
 
-async function selectGender() {
-  document.body.appendChild(createFragment([
-    '\n\n',
-    renderer.school = span('', [
-      span('school-heading', 'CHARACTER CREATION'),
-      '\n',
-      renderer.schoolContent = span(),
-      renderer.schoolContBtn = span('button', '[ok]')
-    ])
-  ]));
+  async function selectGender() {
+    document.body.appendChild(createFragment([
+      '\n\n',
+      renderer.school = span('', [
+        span('school-heading', 'CHARACTER CREATION'),
+        '\n',
+        renderer.schoolContent = span(),
+        renderer.schoolContBtn = span('button hidden', '[ok]')
+      ])
+    ]));
 
-  // Ensure the school container is visible
-  renderer.school.classList.remove('hidden');
+    renderer.school.classList.remove('hidden');
 
-  await triggerChoiceEvent(
-    "Select your gender:",
-    [
-      { label: "Male", action: () => { gameState.gender = 'male'; } },
-      { label: "Female", action: () => { gameState.gender = 'female'; } }
-    ]
-  );
+    await triggerChoiceEvent(
+      'Select your gender:',
+      [
+        { label: 'Male', action: () => { gameState.gender = 'male'; } },
+        { label: 'Female', action: () => { gameState.gender = 'female'; } }
+      ]
+    );
 
-  renderer.schoolContent.innerHTML = '';
-  renderer.school.classList.add('hidden');
-}
-window.clicks = clicks;
-  
-window.startGame = function() {
-  selectGender().then(() => {
-    gameState.accumulativeDay = 0;
-    beginSchool(); // Triggers the first day and builds the UI elements!
-  });
-};
-// Expose clicks globally so render.js can access it
+    if (renderer.school && renderer.school.parentNode) {
+      renderer.school.parentNode.removeChild(renderer.school);
+    }
+    renderer.school = null;
+    renderer.schoolContent = null;
+    renderer.schoolContBtn = null;
+  }
 
+  window.clicks = clicks;
 
-return [clicks];
+  window.startGame = function () {
+    selectGender().then(() => {
+      gameState.accumulativeDay = 0;
+      beginSchool();
+    });
+  };
+
+  return [clicks];
 
 })();
