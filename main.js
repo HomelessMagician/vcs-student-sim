@@ -677,6 +677,18 @@ window.gameState= gameState;
         '• Removed after-school wellness program (SELF)\n• Added [skip class] button\n• Absence / suspension system restored\n• Gender selector is now clickable'
       ]));
     }
+    showScores() {
+      renderer.dialogHeading.textContent = 'SCORES';
+      renderer.dialogContent.appendChild(createFragment([
+        'Local scores not implemented yet.'
+      ]));
+    },
+    showModes() {
+      renderer.dialogHeading.textContent = 'MODES';
+      renderer.dialogContent.appendChild(createFragment([
+        'No extra modes yet.'
+      ]));
+    },
   };
 
 async function selectGender() {
@@ -704,14 +716,16 @@ async function selectGender() {
   renderer.schoolContent.innerHTML = '';
   renderer.school.classList.add('hidden');
 }
-  // Start with gender selection
+window.clicks = clicks;
+  
+window.startGame = function() {
   selectGender().then(() => {
     gameState.accumulativeDay = 0;
     beginSchool(); // Triggers the first day and builds the UI elements!
-});
-
+  });
+};
 // Expose clicks globally so render.js can access it
-window.clicks = clicks;
+
 
 return [clicks];
 
