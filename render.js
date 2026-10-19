@@ -1,4 +1,4 @@
-var renderer = renderer || {};
+
 
 function init() {
   document.body.appendChild(createFragment([
