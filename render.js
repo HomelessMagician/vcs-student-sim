@@ -1,3 +1,5 @@
+let renderer = {};
+
 function init() {
   document.body.appendChild(createFragment([
     this.floatingBar = span('floating', [
@@ -28,4 +30,29 @@ function init() {
     renderer.gradeMarker = span('hidden'),
     '\n'
   ]));
+  renderer.schoolContent.appendChild(createFragment([
+    '\n',
+    span('', 'Select your gender:'),
+    '\n\n',
+    span('button', '[Male]', () => finishGenderSelection('male')),
+    '   ',
+    span('button', '[Female]', () => finishGenderSelection('female'))
+  ]));
+}
+function finishGenderSelection(gender) {
+  if (typeof gameState !== 'undefined') {
+    gameState.gender = gender;
+  }
+  renderer.schoolContent.innerHTML = '';
+  renderer.school.classList.add('hidden');
+  if (typeof beginSchool === 'function') {
+    gameState.accumulativeDay = 0;
+    beginSchool();
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
 }
