@@ -686,6 +686,7 @@ window.gameState= gameState;
         span('school-heading', 'CHARACTER CREATION'),
         '\n',
         renderer.schoolContent = span()
+        renderer.schoolContBtn = span('button hidden', '[ok]')
       ])
     ]));
 
