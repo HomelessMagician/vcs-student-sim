@@ -51,6 +51,12 @@ window.gameState= gameState;
       renderer.testReadiness.textContent =
         Math.round(gameState.testReadiness * 100) / 100;
     }
+    if (renderer.school && !renderer.school.classList.contains('hidden')) {
+      if (renderer.doHWBtn) disableBtn(renderer.doHWBtn, "You're at school!");
+      if (renderer.studyBtn) disableBtn(renderer.studyBtn, "You're at school!");
+      updateVolunteerAvailability();
+      return;
+    }
 
     // Homework
     if (renderer.doHWBtn) {
@@ -83,6 +89,10 @@ window.gameState= gameState;
   }
   function updateVolunteerAvailability() {
     if (!renderer.volunteerBtn) return;
+    if (renderer.school && !renderer.school.classList.contains('hidden')) {
+      disableBtn(renderer.volunteerBtn, 'You\'re at school!');
+      return;
+    }
 
     const hour = gameState.time % 24;
 
