@@ -710,19 +710,17 @@ window.gameState= gameState;
   gameState.tests = 0;
   gameState.testReadiness = 0;
 
+  renderer.time.textContent = humanTime(gameState.time % 24);
+  renderer.day.textContent = dayNames[gameState.day];
+  renderer.timeWrapper.classList.remove('hidden');
+
   document.body.insertBefore(createFragment([
     ' ',
     span('grade-heading', 'GRADE'),
     ' ',
     renderer.grade = span('grade', '100', null, 'Must be at least 90%'),
     '%',
-  ]), renderer.gradeMarker);
-
-  renderer.time.textContent = humanTime(gameState.time % 24);
-  renderer.day.textContent = dayNames[gameState.day];
-  renderer.timeWrapper.classList.remove('hidden');
-
-  document.body.appendChild(createFragment([
+    '\n',
     renderer.volunteerBtn = span('button', '[volunteer]', clicks.volunteer),
     '\n',
     span('', 'You have completed '),
@@ -744,8 +742,7 @@ window.gameState= gameState;
     '\n',
     renderer.sleepBtn = span('button', '[sleep]', clicks.sleep),
     ' Don\'t forget to sleep so you do well on tests!'
-
-  ]));
+  ]), renderer.gradeMarker);
 
   updateHomework();
 }
