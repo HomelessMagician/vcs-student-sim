@@ -679,6 +679,27 @@ window.gameState= gameState;
     }
   };
 
+  async function selectGender() {
+    document.body.appendChild(createFragment([
+      '\n\n',
+      renderer.school = span('', [
+        span('school-heading', 'CHARACTER CREATION'),
+        '\n',
+        renderer.schoolContent = span()
+      ])
+    ]));
+
+    await triggerChoiceEvent(
+      "Select your gender:",
+      [
+        { label: "Male", action: () => { gameState.gender = 'male'; } },
+        { label: "Female", action: () => { gameState.gender = 'female'; } }
+      ]
+    );
+
+    renderer.schoolContent.innerHTML = '';
+    renderer.school.classList.add('hidden');
+  }
   // Start with gender selection
   selectGender().then(() => {
     gameState.accumulativeDay = 0;
