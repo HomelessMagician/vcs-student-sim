@@ -92,7 +92,7 @@ window.gameState= gameState;
       return;
     }
 
-    if (hour >= 20) {
+    if (hour >= 20 || hour < 8) {
       disableBtn(renderer.volunteerBtn, "It's too late to volunteer");
       return;
     }
