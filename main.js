@@ -87,6 +87,42 @@ window.gameState= gameState;
       }
     }
   }
+  function ensureAbsencesUI() {
+    if (renderer.absences) return;
+
+    let anchor = renderer.friends || renderer.grade;
+    if (!anchor || !anchor.parentNode) return;
+
+    let insertBeforeNode = null;
+    if (renderer.friends) {
+      insertBeforeNode = renderer.friends.nextSibling;
+    } else {
+      const percentNode = renderer.grade.nextSibling; // '%'
+      insertBeforeNode = percentNode ? percentNode.nextSibling : null;
+    }
+
+    anchor.parentNode.insertBefore(
+      createFragment([
+        ' ',
+        span('absences-heading', 'ABSENCES', null, 'Too many absences lead to suspension.'),
+        ' ',
+        renderer.absences = span(
+          'absences',
+          String(gameState.absences),
+          null,
+          'Warning at 3, suspension at 5.'
+        )
+      ]),
+      insertBeforeNode
+    );
+  }
+
+  function updateAbsencesUI() {
+    ensureAbsencesUI();
+    if (renderer.absences) {
+      renderer.absences.textContent = String(gameState.absences);
+    }
+  }
 
   function addHours(hours, atHome) {
     gameState.time += hours;
@@ -302,6 +338,7 @@ window.gameState= gameState;
           "\n\n"
         ]));
         gameState.absences++;
+        updateAbsencesUI();
 
       },
       11: async () => {
@@ -389,8 +426,10 @@ window.gameState= gameState;
       ]));
       testsToRetake = gameState.tests;
       gameState.warned = true;
+      updateAbsencesUI();
       await schoolContinue();
     } else if (gameState.absences >= 5) {
+      updateAbsencesUI();
       renderer.schoolContent.appendChild(createFragment([
         '\n',
         span('', 'You now have five unexcused absences. The school must follow district policy.'),
@@ -760,6 +799,7 @@ window.gameState= gameState;
   ]), renderer.gradeMarker);
 
   updateHomework();
+  updateAbsencesUI();
 }
 
   window.clicks = clicks;
