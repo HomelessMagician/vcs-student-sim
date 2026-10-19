@@ -43,7 +43,7 @@ function selectGender() {
       targetBody.innerHTML = '';
 
       const container = document.createElement('div');
-      container.style.cssText = 'padding: 40px; font-family: monospace; line-height: 1.8;';
+      container.style.cssText = 'padding: 40px; font-family: monospace; line-height: 1.8; color: white; background-color: #2b2b2b;';
 
       container.innerHTML = `
         <div style="font-size: 1.4em; margin-bottom: 20px;">Select your gender:</div>
