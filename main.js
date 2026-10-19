@@ -36,44 +36,36 @@ const [clicks] = (() => {
   };
 
 
+// =========== CLICKABLE GENDER SELECTOR ===========
 function selectGender() {
   return new Promise(resolve => {
-    const initGenderUI = () => {
-      // Create an overlay container so we don't wipe out body DOM nodes
-      let container = document.getElementById('gender-select-overlay');
-      if (!container) {
-        container = document.createElement('div');
-        container.id = 'gender-select-overlay';
-        (document.body || document.documentElement).appendChild(container);
-      }
-
-      container.style.cssText = 'padding: 40px; font-family: monospace; line-height: 1.8; color: white; background-color: #2b2b2b; z-index: 9999; position: relative;';
-
-      container.innerHTML = `
-        <div style="font-size: 1.4em; margin-bottom: 20px;">Select your gender:</div>
+    const showPrompt = () => {
+      const contentArea = document.getElementById('school-content') || document.body;
+      contentArea.innerHTML = `
+        <div style="font-size: 1.4em; margin-bottom: 20px; color: white;">Select your gender:</div>
         <div style="margin-top: 15px;">
-          <span class="button" id="gender-male" style="cursor:pointer; margin-right:12px; padding: 5px 10px; background: #444; border: 1px solid #777;">[Male]</span>
-          <span class="button" id="gender-female" style="cursor:pointer; margin-right:12px; padding: 5px 10px; background: #444; border: 1px solid #777;">[Female]</span>
+          <span class="button" id="gender-male" style="cursor:pointer; margin-right:12px; padding: 5px 10px; background: #444; border: 1px solid #777; color: white;">[Male]</span>
+          <span class="button" id="gender-female" style="cursor:pointer; margin-right:12px; padding: 5px 10px; background: #444; border: 1px solid #777; color: white;">[Female]</span>
         </div>
       `;
 
       document.getElementById('gender-male').onclick = () => {
         gameState.gender = 'male';
-        container.remove(); // Remove overlay so main game displays
+        contentArea.innerHTML = '';
         resolve();
       };
 
       document.getElementById('gender-female').onclick = () => {
         gameState.gender = 'female';
-        container.remove(); // Remove overlay so main game displays
+        contentArea.innerHTML = '';
         resolve();
       };
     };
 
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initGenderUI);
+      document.addEventListener('DOMContentLoaded', showPrompt);
     } else {
-      initGenderUI();
+      showPrompt();
     }
   });
 }
