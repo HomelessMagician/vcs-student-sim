@@ -556,6 +556,7 @@ window.gameState= gameState;
 
     gameState.testReadiness = 0;
     if (renderer.testReadiness) renderer.testReadiness.textContent = gameState.testReadiness;
+    updateHomework();
 
     renderer.schoolContent.appendChild(createFragment([
       span('', `You leave school with ${hwGain} more homework assignment(s) and ${gameState.tests} test(s) to prepare for tomorrow.`),
@@ -668,10 +669,8 @@ window.gameState= gameState;
 
     updateHomework();
 
-    if (renderer.volunteerBtn) enableBtn(renderer.volunteerBtn);
-    if (renderer.doHWBtn) enableBtn(renderer.doHWBtn);
     if (renderer.sleepBtn) enableBtn(renderer.sleepBtn);
-    if (renderer.studyBtn) enableBtn(renderer.studyBtn);
+    
     if (renderer.school) renderer.school.classList.add('hidden');
     if (renderer.schoolContBtn) disableBtn(renderer.schoolContBtn);
     if (renderer.schoolContent) renderer.schoolContent.innerHTML = '';
