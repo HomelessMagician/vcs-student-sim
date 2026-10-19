@@ -713,9 +713,8 @@ function selectGender() {
 
   // Start with gender selection
   selectGender().then(() => {
-  document.body.innerHTML = '';
-  gameState.accumulativeDay = 0;
-  beginSchool(); // Triggers the first day and builds the UI elements!
+    gameState.accumulativeDay = 0;
+    beginSchool(); // Triggers the first day and builds the UI elements!
 });
 
 // Expose clicks globally so render.js can access it
