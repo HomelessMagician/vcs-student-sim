@@ -567,24 +567,6 @@ window.gameState= gameState;
           ]));
           break;
         case 4:
-          document.body.appendChild(createFragment([
-            '\n',
-            renderer.doHWBtn = span('button', '[do homework]', clicks.doHW),
-            renderer.volunteerBtn = span('button', '[volunteer]', clicks.volunteer),
-            ' You have ',
-            renderer.hwCount = span('homework-count', ''),
-            ' homework assignment(s) due.',
-            renderer.testStudyMarker = span('hidden'),
-            '\n',
-            renderer.sleepBtn = span('button', '[sleep]', clicks.sleep),
-            ' Don\'t forget to sleep!',
-            '\n',
-            renderer.skipClassBtn = span('button', '[skip class]', clicks.skipClass, 'Skip the entire school day (counts as an absence)')
-          ]));
-          gameState.homeworks += 3;
-          updateHomework();
-          gameState.time = 15;
-          renderer.timeWrapper.classList.remove('hidden');
           break;
       }
       if (renderer.volunteerPercent){
