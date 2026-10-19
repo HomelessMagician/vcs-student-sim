@@ -77,7 +77,7 @@ window.gameState= gameState;
         } else {
           gameState.avgSleepLength = gameState.avgSleepLength * gameState.accumulativeDay / (gameState.accumulativeDay + 1);
         }
-      beginSchool();
+        beginSchool();
       }
     }
   }
