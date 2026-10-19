@@ -340,6 +340,7 @@ const [clicks] = (() => {
           renderer.sleepBtn.dataset.title = 'You aren\'t in school anymore!';
           if (renderer.skipClassBtn) renderer.skipClassBtn.dataset.title = 'You aren\'t in school anymore!';
           return;
+        }
         else {
           renderer.schoolContent.appendChild(createFragment([
             span('', 'Rumors spread of a group that knows all the test answers. You gain some info from listening to conversations.'),
