@@ -1,7 +1,7 @@
 const [clicks] = (() => {
 
   const config = {
-    MAX_Volunteer_Hour: 50
+    MAX_Volunteer_Hour: 100
   };
 
   const gameState = {
@@ -70,15 +70,8 @@ window.gameState= gameState;
       }
     }
 
-    // Volunteer is always available (unless scolded)
-    if (renderer.volunteerBtn) {
-      enableBtn(renderer.volunteerBtn);
-    }
 
     if (gameState.scolded) {
-      if (renderer.volunteerBtn) {
-        disableBtn(renderer.volunteerBtn, 'You cannot concentrate because your parents are scolding you.');
-      }
       if (renderer.studyBtn) {
         disableBtn(renderer.studyBtn, 'You cannot concentrate because your parents are scolding you.');
       }
@@ -86,6 +79,33 @@ window.gameState= gameState;
         disableBtn(renderer.doHWBtn, 'You cannot concentrate because your parents are scolding you.');
       }
     }
+
+    updateVolunteerAvailability();
+  }
+  function updateVolunteerAvailability() {
+    if (!renderer.volunteerBtn) return;
+
+    const hour = gameState.time % 24;
+
+    if (gameState.scolded) {
+      disableBtn(
+        renderer.volunteerBtn,
+        'You cannot concentrate because your parents are scolding you.'
+      );
+      return;
+    }
+
+    if (hour >= 20) {
+      disableBtn(renderer.volunteerBtn, "It's too late to volunteer");
+      return;
+    }
+
+    if (gameState.totalVolunteerHours >= config.MAX_Volunteer_Hour) {
+      disableBtn(renderer.volunteerBtn, 'You already finished your volunteer hours!');
+      return;
+    }
+
+    enableBtn(renderer.volunteerBtn);
   }
   function ensureAbsencesUI() {
     if (renderer.absences) return;
@@ -129,6 +149,8 @@ window.gameState= gameState;
     gameState.day = Math.floor(gameState.time / 24) % 5;
     renderer.time.textContent = humanTime(gameState.time % 24);
     renderer.day.textContent = dayNames[gameState.day];
+
+    updateVolunteerAvailability();
     if (atHome) {
       if (Math.floor((gameState.time - 8) / 24) > gameState.accumulativeDay) {
         gameState.sleeplessNights++;
@@ -214,10 +236,10 @@ window.gameState= gameState;
       ]));
 
       // --- VOLUNTEER HOUR PENALTY CHECK ---
-      if (gameState.volunteerHours < 50) {
+      if (gameState.volunteerHours < 100) {
         gameState.grade -= 20;
         renderer.schoolContent.appendChild(createFragment([
-          span('', 'WARNING: You failed to complete the required 50 volunteer hours. Your final grade drops by 20%!'),
+          span('', 'WARNING: You failed to complete the required 100 volunteer hours. Your final grade drops by 20%!'),
           '\n\n'
         ]));
         await schoolContinue();
