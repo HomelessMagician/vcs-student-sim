@@ -347,11 +347,6 @@ window.gameState= gameState;
         gameState.testReadiness += 15;
       },
     };
-
-    if (interactiveEvents[gameState.accumulativeDay]) {
-      await interactiveEvents[gameState.accumulativeDay]();
-    }
-
     if (gameState.accumulativeDay === 1) {
       if (!renderer.grade) {
         document.body.insertBefore(createFragment([
@@ -376,7 +371,13 @@ window.gameState= gameState;
         renderer.school.classList.remove('hidden');
         enableBtn(renderer.schoolContBtn);
       }
+    }    
+
+    if (interactiveEvents[gameState.accumulativeDay]) {
+      await interactiveEvents[gameState.accumulativeDay]();
     }
+
+
 
     let testsToRetake = 0;
 
@@ -729,12 +730,9 @@ window.gameState= gameState;
     '\n',
     renderer.volunteerBtn = span('button', '[volunteer]', clicks.volunteer),
     '\n',
-    renderer.studyBtn = span('button', '[study for tests]', clicks.studyTest),
-    ' You are ',
-    renderer.testReadiness = span('test-readiness', '0'),
-    '% ready for ',
-    renderer.tests = span('upcoming-tests', '0'),
-    ' test(s) tomorrow.',
+    span('', 'You have completed '),
+    renderer.volunteerPercent = span('volunteer-percentage', '0'),
+    span('', ' hours of community service.'),
     '\n',
     renderer.doHWBtn = span('button', '[do homework]', clicks.doHW),
     ' You have ',
@@ -742,8 +740,15 @@ window.gameState= gameState;
     ' homework assignment(s) due.',
     renderer.testStudyMarker = span('hidden'),
     '\n',
+    renderer.studyBtn = span('button', '[study for tests]', clicks.studyTest),
+    ' You are ',
+    renderer.testReadiness = span('test-readiness', '0'),
+    '% ready for ',
+    renderer.tests = span('upcoming-tests', '0'),
+    ' test(s) tomorrow.',
+    '\n',
     renderer.sleepBtn = span('button', '[sleep]', clicks.sleep),
-    ' Don\'t forget to sleep!'
+    ' Don\'t forget to sleep so you do well on tests!'
 
   ]));
 
