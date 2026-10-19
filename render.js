@@ -27,8 +27,8 @@ function init() {
       ' ',
       renderer.day = span('day', 'MONDAY')
     ]),
-    renderer.gradeMarker = span('hidden'),
-    renderer.schoolContBtn = span('button', 'Continue')
+    renderer.gradeMarker = span('hidden')
+
   ]));
 }
 
