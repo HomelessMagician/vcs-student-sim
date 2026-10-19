@@ -728,13 +728,13 @@ window.gameState= gameState;
   document.body.appendChild(createFragment([
     '\n',
     renderer.volunteerBtn = span('button', '[volunteer]', clicks.volunteer),
+    '\n',
+    renderer.studyBtn = span('button', '[study for tests]', clicks.studyTest),
     ' You are ',
     renderer.testReadiness = span('test-readiness', '0'),
     '% ready for ',
     renderer.tests = span('upcoming-tests', '0'),
     ' test(s) tomorrow.',
-    '\n',
-    renderer.studyBtn = span('button', '[study for tests]', clicks.studyTest),
     '\n',
     renderer.doHWBtn = span('button', '[do homework]', clicks.doHW),
     ' You have ',
@@ -744,6 +744,7 @@ window.gameState= gameState;
     '\n',
     renderer.sleepBtn = span('button', '[sleep]', clicks.sleep),
     ' Don\'t forget to sleep!'
+
   ]));
 
   updateHomework();
