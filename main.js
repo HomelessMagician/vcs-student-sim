@@ -287,7 +287,7 @@ window.gameState= gameState;
               }
             },
             {
-              label: "U2Nob29sIFNob290aW5nCg==",
+              label: "I'm sick and twisted",
               action: async () => {
                 renderer.schoolContent.appendChild(createFragment([
                   '\n',
@@ -610,10 +610,14 @@ window.gameState= gameState;
                 '\n\n',
                 span('button', '[try again]', clicks.reload)
               ]));
+              if (renderer.volunteerBtn) disableBtn(renderer.volunteerBtn, 'There\'s no school in the afterlife.');
+              if (renderer.doHWBtn) disableBtn(renderer.doHWBtn, 'There\'s no school in the afterlife.');
+              if (renderer.studyBtn) disableBtn(renderer.studyBtn, 'There\'s no school in the afterlife.');
+              if (renderer.sleepBtn) disableBtn(renderer.sleepBtn, 'There\'s no school in the afterlife.');
             }
           },
           {
-            label: "U2Nob29sIFNob290aW5nCg==",
+            label: "I'm sick and twisted",
             action: async () => {
               renderer.schoolContent.appendChild(createFragment([
                 '\n',
@@ -629,6 +633,10 @@ window.gameState= gameState;
                 '\n\n',
                 span('button', '[try again]', clicks.reload)
               ]));
+              if (renderer.volunteerBtn) disableBtn(renderer.volunteerBtn, 'There\'s no school in the afterlife.');
+              if (renderer.doHWBtn) disableBtn(renderer.doHWBtn, 'There\'s no school in the afterlife.');
+              if (renderer.studyBtn) disableBtn(renderer.studyBtn, 'There\'s no school in the afterlife.');
+              if (renderer.sleepBtn) disableBtn(renderer.sleepBtn, 'There\'s no school in the afterlife.');
             }
           }
         ]
