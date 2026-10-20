@@ -51,7 +51,8 @@ window.gameState= gameState;
       renderer.testReadiness.textContent =
         Math.round(gameState.testReadiness * 100) / 100;
     }
-    if (renderer.school && !renderer.school.classList.contains('hidden')) {
+    const hour = gameState.time % 24;
+    if (hour >= 8 && hour < 16)) {
       if (renderer.doHWBtn) disableBtn(renderer.doHWBtn, "You're at school!");
       if (renderer.studyBtn) disableBtn(renderer.studyBtn, "You're at school!");
       updateVolunteerAvailability();
@@ -89,12 +90,13 @@ window.gameState= gameState;
   }
   function updateVolunteerAvailability() {
     if (!renderer.volunteerBtn) return;
-    if (renderer.school && !renderer.school.classList.contains('hidden')) {
+    const hour = gameState.time % 24;
+    if (hour >= 8 && hour < 16) {
       disableBtn(renderer.volunteerBtn, 'You\'re at school!');
       return;
     }
 
-    const hour = gameState.time % 24;
+    
 
     if (gameState.scolded) {
       disableBtn(
