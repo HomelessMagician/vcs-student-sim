@@ -450,7 +450,7 @@ window.gameState= gameState;
               { label: "Ignore", action: () => {gameState.wokeness = Math.min(100, gameState.wokeness -5); } }
             ]
           );
-      },        
+      }        
     };
     if (gameState.accumulativeDay === 1) {
       if (!renderer.grade) {
