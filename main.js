@@ -400,6 +400,7 @@ window.gameState= gameState;
             "\n\n"
           ]));
           gameState.homeworks += 1;
+          if (renderer.hwCount) renderer.hwCount.textContent = gameState.homeworks;
         }     
       },
       14: async () => {
