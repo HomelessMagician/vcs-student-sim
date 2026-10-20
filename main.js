@@ -403,7 +403,9 @@ window.gameState= gameState;
         }     
       },
       14: async () => {
+        
         if (gameState.cheatingRoyArc === true){
+          gameState.isGameOver = true;
           renderer.schoolContent.appendChild(createFragment([
             span('', 'The admin found out that Roy Shin was cheating. He ended up snitching on you, and you get expelled.'),
             '\n\n',
@@ -454,9 +456,9 @@ window.gameState= gameState;
       }
     }    
     if (interactiveEvents[gameState.accumulativeDay]) {
-      const isGameOver = await interactiveEvents[gameState.accumulativeDay]();
-      if (isGameOver) return; 
+      await interactiveEvents[gameState.accumulativeDay]();
     }
+    if (gameState.isGameOver) return;
 
 
 
