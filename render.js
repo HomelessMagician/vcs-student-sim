@@ -18,7 +18,7 @@ function init() {
       ' ',
       span('button info-button', '[updates]', openDialog(window.clicks.showUpdates)),
       ' ',
-      span('button info-button', '[source]', 'https://github.com/SheepTester/gunn-student-sim/')
+      span('button info-button', '[source]', 'https://github.com/myusername44444-sketch/vcs-student-sim/')
     ]),
     renderer.timeWrapper = span('hidden', [
       span('time-heading', 'TIME'),
