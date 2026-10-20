@@ -52,7 +52,7 @@ window.gameState= gameState;
         Math.round(gameState.testReadiness * 100) / 100;
     }
     const hour = gameState.time % 24;
-    if (hour >= 8 && hour < 16)) {
+    if (hour >= 8 && hour < 16) {
       if (renderer.doHWBtn) disableBtn(renderer.doHWBtn, "You're at school!");
       if (renderer.studyBtn) disableBtn(renderer.studyBtn, "You're at school!");
       updateVolunteerAvailability();
