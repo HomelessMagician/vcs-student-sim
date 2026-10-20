@@ -529,8 +529,8 @@ window.gameState= gameState;
 
     if (gameState.accumulativeDay === 2) {
       await assembly([
-        '--: Representatives wave to the audience.',
-        'cc: Good morning! Today, we are giving you a challenge: maintain at least THREE friendships!'
+        '--: The Pastor waves to the audience.',
+        'cc: Good morning! In order to build a more holy community, we want each and every one of you to go out and spread the gospel to three fellow disciples! Let\'s make this school like Heaven on Earth! If you don\'t, we will be concerned!'
       ]);
     
       if (renderer.grade && renderer.grade.parentNode) {
@@ -761,7 +761,7 @@ window.gameState= gameState;
     showInfo() {
       renderer.dialogHeading.textContent = 'INFO';
       renderer.dialogContent.appendChild(createFragment([
-        'This is a very realistic portrayal of a Valley Christian Student. You will interact with the administration and students who represent the body of Christ; their actions are the hands and feet of Jesus (1 Corinthians 12:20). \n\n In order to win, you must survive all 100 days of high school without letting your grades drop. Don\'t forget your community service... \n\n Many thanks to SheepTester and his original game: https://sheeptester.github.io/gunn-student-sim/ for inspiring this work.'
+        'This is a very realistic portrayal of a Valley Christian Student. You will interact with the administration and students who represent the body of Christ; their actions are the hands and feet of Jesus (1 Corinthians 12:20). \n\nIn order to win, you must survive all 100 days of high school without letting your grades drop. Don\'t forget your community service... \n\nMany thanks to SheepTester and his original game: https://sheeptester.github.io/gunn-student-sim/ for inspiring this work.'
       ]));
     },
 
