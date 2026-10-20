@@ -234,7 +234,7 @@ window.gameState= gameState;
     gameState.accumulativeDay++;
 
 
-    // 100-day Win Condition
+    // 100 days
     if (gameState.accumulativeDay >= 100) {
       while (document.body.children.length) {
         if (document.body.lastChild !== this.floatingBar)
@@ -246,7 +246,6 @@ window.gameState= gameState;
         renderer.schoolContBtn = span('button', '[ok]', clicks.schoolContinue)
       ]));
 
-      // --- VOLUNTEER HOUR PENALTY CHECK ---
       if (gameState.volunteerHours < 100) {
         gameState.grade -= 20;
         renderer.schoolContent.appendChild(createFragment([
@@ -356,7 +355,7 @@ window.gameState= gameState;
       return;
     }
 
-    // Interactive Daily Events
+    // daily events
     const interactiveEvents = {
       2: async () => {
         await triggerChoiceEvent(
@@ -690,7 +689,7 @@ window.gameState= gameState;
     if (hoursLeft <= 0) addHours(0, true);
   }
 
-  // ========== CLICK HANDLERS ==========
+
   const clicks = {
     volunteer() {
       if (gameState.volunteerHours < config.MAX_Volunteer_Hour) {
