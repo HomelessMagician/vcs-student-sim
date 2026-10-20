@@ -446,7 +446,7 @@ window.gameState= gameState;
             "A student starts arguing with the Bible teacher about morality in the Bible. The student looks around to see if anyone agrees.",
             [
               { label: "Join in the conversation", action: () => {gameState.wokeness = Math.min(100, gameState.wokeness + 10); updateFriendsUI();} },
-              { label: "Support the Bible and debate her", action: () => {gameState.wokeness = Math.min(100, gameState.wokeness - 10); } }
+              { label: "Support the Bible and debate her", action: () => {gameState.wokeness = Math.min(100, gameState.wokeness - 10); } },
               { label: "Ignore", action: () => {gameState.wokeness = Math.min(100, gameState.wokeness -5); } }
             ]
           );
