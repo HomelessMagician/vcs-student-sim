@@ -266,7 +266,7 @@ window.gameState= gameState;
           '\n\n'
         ]));
         await triggerChoiceEvent(
-          "With the volunteer penalty dropping your grade below 70% and having 0 friends left, everything crashes down on graduation day. There are only two ways this can end.",
+          "With the volunteer penalty dropping your grade below 70% and having 0 friends left, everything crashes down on graduation day.",
           [
             {
               label: "Suicide",
@@ -290,30 +290,30 @@ window.gameState= gameState;
                 if (renderer.studyBtn) disableBtn(renderer.studyBtn, 'There\'s no school in the afterlife.');
                 if (renderer.sleepBtn) disableBtn(renderer.sleepBtn, 'There\'s no school in the afterlife.');
               }
-            },
-            {
-              label: "I'm sick and twisted",
-              action: async () => {
-                renderer.schoolContent.appendChild(createFragment([
-                  '\n',
-                  span('', 'Blood spurts from a students\'s head. Screams echo across the classroom and spill out into the hall.'),
-                  '\n\n',
-                  span('', 'Your former classmates try to run, but they can\'t get very far. With you blocking the only doorway, the only way out is the realm of the Grim Reaper...'),
-                  '\n\n',
-                  span('', 'You move through the halls, going from classroom after classroom. They\'ll get you in the end, but what does it matter now?'),
-                  '\n\n',
-                  span('end-msg', 'ENDING: death'),
-                  '\n\n',
-                  span('the-end', 'GAME OVER'),
-                  '\n\n',
-                  span('button', '[try again]', clicks.reload)
-                ]));
-                if (renderer.volunteerBtn) disableBtn(renderer.volunteerBtn, 'There\'s no school in the afterlife.');
-                if (renderer.doHWBtn) disableBtn(renderer.doHWBtn, 'There\'s no school in the afterlife.');
-                if (renderer.studyBtn) disableBtn(renderer.studyBtn, 'There\'s no school in the afterlife.');
-                if (renderer.sleepBtn) disableBtn(renderer.sleepBtn, 'There\'s no school in the afterlife.');
-              }
             }
+            // {
+            //   label: "I'm sick and twisted",
+            //   action: async () => {
+            //     renderer.schoolContent.appendChild(createFragment([
+            //       '\n',
+            //       span('', 'Blood spurts from a students\'s head. Screams echo across the classroom and spill out into the hall.'),
+            //       '\n\n',
+            //       span('', 'Your former classmates try to run, but they can\'t get very far. With you blocking the only doorway, the only way out is the realm of the Grim Reaper...'),
+            //       '\n\n',
+            //       span('', 'You move through the halls, going from classroom after classroom. They\'ll get you in the end, but what does it matter now?'),
+            //       '\n\n',
+            //       span('end-msg', 'ENDING: death'),
+            //       '\n\n',
+            //       span('the-end', 'GAME OVER'),
+            //       '\n\n',
+            //       span('button', '[try again]', clicks.reload)
+            //     ]));
+            //     if (renderer.volunteerBtn) disableBtn(renderer.volunteerBtn, 'There\'s no school in the afterlife.');
+            //     if (renderer.doHWBtn) disableBtn(renderer.doHWBtn, 'There\'s no school in the afterlife.');
+            //     if (renderer.studyBtn) disableBtn(renderer.studyBtn, 'There\'s no school in the afterlife.');
+            //     if (renderer.sleepBtn) disableBtn(renderer.sleepBtn, 'There\'s no school in the afterlife.');
+            //   }
+            // }
           ]
         );
         return;
@@ -364,7 +364,7 @@ window.gameState= gameState;
     const interactiveEvents = {
       2: async () => {
         await triggerChoiceEvent(
-          "A student named Riny Hos approaches you. He wants homework answers and threatens you for them.",
+          "A student named Riny Soh approaches you. He wants homework answers and threatens you for them.",
           [
             { label: "Ignore him", action: () => { gameState.royShinArc++; } },
             { label: "Give him the info", action: () => { gameState.friends++; gameState.cheatingRoyArc = true; updateFriendsUI();} },
@@ -393,7 +393,7 @@ window.gameState= gameState;
       11: async () => {
         if (gameState.royShinArc === 1) {
           await triggerChoiceEvent(
-            "Riny Hos sees you again in the halls. He tells you to \"run the faze in the restroom\", whatever that means.",
+            "Riny Soh sees you again in the halls. He tells you to \"run the faze in the restroom\", whatever that means.",
             [
               { label: "Laugh it off and walk away", action: () => {gameState.royShinArc++; } },
               { label: "shrug", action: () => {gameState.royShinArc++; } }
@@ -413,7 +413,7 @@ window.gameState= gameState;
         if (gameState.cheatingRoyArc === true){
           gameState.isGameOver = true;
           renderer.schoolContent.appendChild(createFragment([
-            span('', 'The admin found out that Riny Hos was cheating. He ended up snitching on you, and you get expelled.'),
+            span('', 'The admin found out that Riny Soh was cheating. He ended up snitching on you, and you get expelled.'),
             '\n\n',
             span('end-msg', 'You have been suspended.'),
             '\n\n',
@@ -637,30 +637,30 @@ window.gameState= gameState;
               if (renderer.studyBtn) disableBtn(renderer.studyBtn, 'There\'s no school in the afterlife.');
               if (renderer.sleepBtn) disableBtn(renderer.sleepBtn, 'There\'s no school in the afterlife.');
             }
-          },
-          {
-            label: "I'm sick and twisted",
-            action: async () => {
-              renderer.schoolContent.appendChild(createFragment([
-                '\n',
-                span('', 'Blood spurts from a classmate\'s head. Screams echo across the classroom and spill out into the hall.'),
-                '\n\n',
-                span('', 'Your former classmates try to run, but they can\'t get very far. With you blocking the only doorway, the only way out is the realm of the Grim Reaper...'),
-                '\n\n',
-                span('', 'You move through the halls, going from classroom after classroom. They\'ll get you in the end, but what does it matter now?'),
-                '\n\n',
-                span('end-msg', 'ENDING: death'),
-                '\n\n',
-                span('the-end', 'GAME OVER'),
-                '\n\n',
-                span('button', '[try again]', clicks.reload)
-              ]));
-              if (renderer.volunteerBtn) disableBtn(renderer.volunteerBtn, 'There\'s no school in the afterlife.');
-              if (renderer.doHWBtn) disableBtn(renderer.doHWBtn, 'There\'s no school in the afterlife.');
-              if (renderer.studyBtn) disableBtn(renderer.studyBtn, 'There\'s no school in the afterlife.');
-              if (renderer.sleepBtn) disableBtn(renderer.sleepBtn, 'There\'s no school in the afterlife.');
-            }
           }
+          // {
+          //   label: "I'm sick and twisted",
+          //   action: async () => {
+          //     renderer.schoolContent.appendChild(createFragment([
+          //       '\n',
+          //       span('', 'Blood spurts from a classmate\'s head. Screams echo across the classroom and spill out into the hall.'),
+          //       '\n\n',
+          //       span('', 'Your former classmates try to run, but they can\'t get very far. With you blocking the only doorway, the only way out is the realm of the Grim Reaper...'),
+          //       '\n\n',
+          //       span('', 'You move through the halls, going from classroom after classroom. They\'ll get you in the end, but what does it matter now?'),
+          //       '\n\n',
+          //       span('end-msg', 'ENDING: death'),
+          //       '\n\n',
+          //       span('the-end', 'GAME OVER'),
+          //       '\n\n',
+          //       span('button', '[try again]', clicks.reload)
+          //     ]));
+          //     if (renderer.volunteerBtn) disableBtn(renderer.volunteerBtn, 'There\'s no school in the afterlife.');
+          //     if (renderer.doHWBtn) disableBtn(renderer.doHWBtn, 'There\'s no school in the afterlife.');
+          //     if (renderer.studyBtn) disableBtn(renderer.studyBtn, 'There\'s no school in the afterlife.');
+          //     if (renderer.sleepBtn) disableBtn(renderer.sleepBtn, 'There\'s no school in the afterlife.');
+          //   }
+          // }
         ]
       );
     }
