@@ -159,6 +159,11 @@ window.gameState= gameState;
       renderer.friends.textContent = String(gameState.friends);
     }
   }
+  function updateDayCounterUI() {
+    if (renderer.day) {
+      renderer.day.textContent = `DAY ${gameState.accumulativeDay}/100`;
+    }
+  }
 
   function addHours(hours, atHome) {
     gameState.time += hours;
@@ -237,6 +242,7 @@ window.gameState= gameState;
     if (renderer.studyBtn) disableBtn(renderer.studyBtn, 'You\'re at school!');
     if (gameState.scolded) gameState.scolded = false;
     gameState.accumulativeDay++;
+    updateDayCounterUI();
 
 
     // 100 days
