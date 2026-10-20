@@ -159,9 +159,31 @@ window.gameState= gameState;
       renderer.friends.textContent = String(gameState.friends);
     }
   }
+  function ensureDayCounterUI() {
+    if (renderer.dayCounter) return;
+
+    // Anchor next to absences or friends
+    let anchor = renderer.absences || renderer.friends || renderer.grade;
+    if (!anchor || !anchor.parentNode) return;
+
+    anchor.parentNode.insertBefore(
+      createFragment([
+        ' ',
+        span('day-heading', 'DAY'),
+        ' ',
+        renderer.dayCounter = span(
+          'day-counter',
+          `${gameState.accumulativeDay}/100`
+        )
+      ]),
+      anchor.nextSibling
+    );
+  }
+
   function updateDayCounterUI() {
-    if (renderer.day) {
-      renderer.day.textContent = `DAY ${gameState.accumulativeDay}/100`;
+    ensureDayCounterUI();
+    if (renderer.dayCounter) {
+      renderer.dayCounter.textContent = `${gameState.accumulativeDay}/100`;
     }
   }
 
@@ -858,7 +880,7 @@ window.gameState= gameState;
   gameState.homeworks = 3;
   gameState.tests = 0;
   gameState.testReadiness = 0;
-
+  updateDayCounterUI();
   renderer.time.textContent = humanTime(gameState.time % 24);
   renderer.day.textContent = dayNames[gameState.day];
   renderer.timeWrapper.classList.remove('hidden');
