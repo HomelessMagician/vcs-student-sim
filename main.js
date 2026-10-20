@@ -761,14 +761,14 @@ window.gameState= gameState;
     showInfo() {
       renderer.dialogHeading.textContent = 'INFO';
       renderer.dialogContent.appendChild(createFragment([
-        'Survive 100 days of school by balancing academics, homework, and test prep.\n\nYou can skip class, but too many absences will get you suspended.'
+        'This is a very realistic portrayal of a Valley Christian Student. You will interact with the administration and students who represent the body of Christ; their actions are the hands and feet of Jesus (1 Corinthians 12:20). \n\n In order to win, you must survive all 100 days of high school without letting your grades drop. Don\'t forget your community service... \n\n Many thanks to SheepTester and his original game: https://sheeptester.github.io/gunn-student-sim/ for inspiring this work.'
       ]));
     },
 
     showUpdates() {
       renderer.dialogHeading.textContent = 'UPDATES';
       renderer.dialogContent.appendChild(createFragment([
-        '• Removed after-school wellness program (SELF)\n• Added [skip class] button\n• Absence / suspension system restored\n• Gender selector is now clickable'
+        '• i got it to work '
       ]));
     },
     showScores() {
