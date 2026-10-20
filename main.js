@@ -154,6 +154,11 @@ window.gameState= gameState;
       renderer.absences.textContent = String(gameState.absences);
     }
   }
+  function updateFriendsUI() {
+    if (renderer.friends) {
+      renderer.friends.textContent = String(gameState.friends);
+    }
+  }
 
   function addHours(hours, atHome) {
     gameState.time += hours;
@@ -359,10 +364,10 @@ window.gameState= gameState;
     const interactiveEvents = {
       2: async () => {
         await triggerChoiceEvent(
-          "A student named Roy Shin approaches you. He wants homework answers and threatens you for them.",
+          "A student named Riny Hos approaches you. He wants homework answers and threatens you for them.",
           [
-            { label: "Tell him to fuck off", action: () => { gameState.royShinArc++; } },
-            { label: "Give him the info", action: () => { gameState.friends++; gameState.cheatingRoyArc = true;} },
+            { label: "Ignore him", action: () => { gameState.royShinArc++; } },
+            { label: "Give him the info", action: () => { gameState.friends++; gameState.cheatingRoyArc = true; updateFriendsUI();} },
           ]
         );
       },
@@ -371,7 +376,7 @@ window.gameState= gameState;
         await triggerChoiceEvent(
           "A group of students asks you to join their study group chat. It seems sketchy.",
           [
-            { label: "Join", action: () => { gameState.cheatingGCArc = true; gameState.friends += 5; } },
+            { label: "Join", action: () => { gameState.cheatingGCArc = true; gameState.friends += 5; updateFriendsUI();} },
             { label: "Decline", action: () => {} }
           ]
         );
@@ -388,7 +393,7 @@ window.gameState= gameState;
       11: async () => {
         if (gameState.royShinArc === 1) {
           await triggerChoiceEvent(
-            "Roy Shin sees you again in the halls. He tells you to \"run the faze in the restroom\", whatever that means.",
+            "Riny Hos sees you again in the halls. He tells you to \"run the faze in the restroom\", whatever that means.",
             [
               { label: "Laugh it off and walk away", action: () => {gameState.royShinArc++; } },
               { label: "shrug", action: () => {gameState.royShinArc++; } }
@@ -408,7 +413,7 @@ window.gameState= gameState;
         if (gameState.cheatingRoyArc === true){
           gameState.isGameOver = true;
           renderer.schoolContent.appendChild(createFragment([
-            span('', 'The admin found out that Roy Shin was cheating. He ended up snitching on you, and you get expelled.'),
+            span('', 'The admin found out that Riny Hos was cheating. He ended up snitching on you, and you get expelled.'),
             '\n\n',
             span('end-msg', 'You have been suspended.'),
             '\n\n',
@@ -428,8 +433,24 @@ window.gameState= gameState;
           span('', 'Rumors spread of a group that knows all the test answers. You gain some info from listening to conversations.'),
           '\n\n',
         ]));
-        gameState.testReadiness += 15;
-      }
+        gameState.testReadiness = Math.min(100, gameState.testReadiness + 20);
+
+        if (renderer.testReadiness) {
+          renderer.testReadiness.textContent = Math.round(gameState.testReadiness * 100) / 100;
+        }
+
+        await schoolContinue();
+      },
+      16: async () => { 
+        await triggerChoiceEvent(
+            "A student starts arguing with the Bible teacher about morality in the Bible. The student looks around to see if anyone agrees.",
+            [
+              { label: "Join in the conversation", action: () => {gameState.wokeness = Math.min(100, gameState.wokeness + 10); updateFriendsUI();} },
+              { label: "Support the Bible and debate her", action: () => {gameState.wokeness = Math.min(100, gameState.wokeness - 10); } }
+              { label: "Ignore", action: () => {gameState.wokeness = Math.min(100, gameState.wokeness -5); } }
+            ]
+          );
+      },        
     };
     if (gameState.accumulativeDay === 1) {
       if (!renderer.grade) {
@@ -592,7 +613,7 @@ window.gameState= gameState;
       ]));
 
       await triggerChoiceEvent(
-        "You have 0 friends left and your grade has fallen below 70%. It's only going to get worse from here. What do you do?",
+        "You have 0 friends left and your grade has fallen below 70%. It's only going to get worse from here. ",
         [
           {
             label: "Suicide",
