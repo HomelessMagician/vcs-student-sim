@@ -378,7 +378,7 @@ window.gameState= gameState;
       },
       9: async () => {
         renderer.schoolContent.appendChild(createFragment([
-          span('', 'You forgot your calculator on the day of the first math test. You end up missing your first class to go back home and get it'),
+          span('', 'You forgot your calculator on the day of the first math project. You end up missing your first class to go back home and get it'),
           "\n\n"
         ]));
         gameState.absences++;
@@ -388,7 +388,7 @@ window.gameState= gameState;
       11: async () => {
         if (gameState.royShinArc === 1) {
           await triggerChoiceEvent(
-            "Roy Shin sees you again in the halls. He tells you to come fight him after school.",
+            "Roy Shin sees you again in the halls. He tells you to \"run the faze in the restroom\", whatever that means.",
             [
               { label: "Laugh it off and walk away", action: () => {gameState.royShinArc++; } },
               { label: "shrug", action: () => {gameState.royShinArc++; } }
@@ -418,7 +418,7 @@ window.gameState= gameState;
           renderer.doHWBtn.dataset.title = 'You aren\'t in school anymore!';
           if (renderer.volunteerBtn) renderer.volunteerBtn.dataset.title = 'You aren\'t in school anymore!';
           renderer.sleepBtn.dataset.title = 'You aren\'t in school anymore!';
-          return;
+          return true;
         }
 
         renderer.schoolContent.appendChild(createFragment([
@@ -426,7 +426,7 @@ window.gameState= gameState;
           '\n\n',
         ]));
         gameState.testReadiness += 15;
-      },
+      }
     };
     if (gameState.accumulativeDay === 1) {
       if (!renderer.grade) {
@@ -453,9 +453,9 @@ window.gameState= gameState;
         enableBtn(renderer.schoolContBtn);
       }
     }    
-
     if (interactiveEvents[gameState.accumulativeDay]) {
-      await interactiveEvents[gameState.accumulativeDay]();
+      const isGameOver = await interactiveEvents[gameState.accumulativeDay]();
+      if (isGameOver) return; 
     }
 
 
