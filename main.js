@@ -439,7 +439,7 @@ window.gameState= gameState;
       }
       document.body.appendChild(createFragment([
         '\n\n',
-        renderer.school = span('hidden', [
+        renderer.school = span('', [
           span('school-heading', 'SCHOOL'),
           '\n',
           renderer.schoolContent = span(),
@@ -452,7 +452,6 @@ window.gameState= gameState;
         enableBtn(renderer.schoolContBtn);
       }
     }    
-    if (renderer.school) renderer.school.classList.remove('hidden');
 
     if (interactiveEvents[gameState.accumulativeDay]) {
       await interactiveEvents[gameState.accumulativeDay]();
