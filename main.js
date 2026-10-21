@@ -32,6 +32,7 @@ const [clicks] = (() => {
     cheatingGCArc: false,
     cheatingRoyArc: false,
     wokeness: 50,
+    trauma: false,
   
   };
 
@@ -289,13 +290,13 @@ window.gameState= gameState;
         await schoolContinue();
       }
 
-     if (gameState.friends === 0 && gameState.grade < 75) {
+     if ((gameState.friends === 0 || gameState.trauma == true) && (gameState.grade < 75 ) {
         renderer.schoolContent.appendChild(createFragment([
           span('parents-heading', 'CRISIS POINT'),
           '\n\n'
         ]));
         await triggerChoiceEvent(
-          "With the volunteer penalty dropping your grade below 70% and having 0 friends left, everything crashes down on graduation day.",
+          "With your final grade dropped below 75%, everything crashes down on graduation day.",
           [
             {
               label: "Suicide",
@@ -422,7 +423,7 @@ window.gameState= gameState;
       11: async () => {
         if (gameState.royShinArc === 1) {
           await triggerChoiceEvent(
-            "Riny Soh sees you again in the halls. He tells you to \"run the faze in the restroom\", whatever that means.",
+            "Riny Soh sees you again in the halls. He tells you to \"run the fade in the restroom\", whatever that means.",
             [
               { label: "Laugh it off and walk away", action: () => {gameState.royShinArc++; } },
               { label: "shrug", action: () => {gameState.royShinArc++; } }
@@ -487,7 +488,15 @@ window.gameState= gameState;
         ]));
           gameState.homeworks += 2;
           if (renderer.hwCount) renderer.hwCount.textContent = gameState.homeworks;
-     }
+     },
+    19:async () => {
+      await triggerChoiceEvent(
+        "The big Kirk attends your chapel to speak about transgender gang violence. You see a student pull a sniper rifle from their backpack.",
+        [
+          { label: "Shout out for help", action: () => { gameState.wokeness = Math.min(100, gameState.wokeness - 15); } },
+          { label: "Watch what happens", action: () => { gameState.wokeness = Math.min(100, gameState.wokeness + 20); gameState.trauma = true; } }
+        [
+      );
     };
     if (gameState.accumulativeDay === 1) {
       if (!renderer.grade) {
@@ -644,7 +653,7 @@ window.gameState= gameState;
     let hoursLeft = Math.ceil((gameState.time - 8) / 24) * 24 + 8 - gameState.time;
 
     // Crisis point
-    if (gameState.friends === 0 && gameState.grade < 70) {
+    if ((gameState.friends === 0 || gameState.trauma == true) && (gameState.grade < 75 ) {
       renderer.schoolContent.appendChild(createFragment([
         '\n',
         span('parents-heading', 'CRISIS POINT'),
@@ -652,7 +661,7 @@ window.gameState= gameState;
       ]));
 
       await triggerChoiceEvent(
-        "You have 0 friends left and your grade has fallen below 70%. It's only going to get worse from here. ",
+        "You have 0 friends left and your grade has fallen below 75%. It's only going to get worse from here. ",
         [
           {
             label: "Suicide",
