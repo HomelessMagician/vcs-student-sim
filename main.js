@@ -265,6 +265,7 @@ window.gameState= gameState;
     if (gameState.scolded) gameState.scolded = false;
     gameState.accumulativeDay++;
     updateDayCounterUI();
+    const hwBeforeSchool = gameState.homeworks;
 
 
     // 100 days
@@ -458,27 +459,35 @@ window.gameState= gameState;
         }
 
         renderer.schoolContent.appendChild(createFragment([
-          span('', 'Rumors spread of a group that knows all the test answers. You gain some info from listening to conversations.'),
+          span('', 'Rumors spread of a group that knows all the test answers.'),
           '\n\n',
         ]));
-        gameState.testReadiness = Math.min(100, gameState.testReadiness + 20);
-
-        if (renderer.testReadiness) {
-          renderer.testReadiness.textContent = Math.round(gameState.testReadiness * 100) / 100;
-        }
-
-        await schoolContinue();
       },
-      16: async () => { 
-        await triggerChoiceEvent(
-            "A student starts arguing with the Bible teacher about morality in the Bible. The student looks around to see if anyone agrees.",
-            [
-              { label: "Join in the conversation", action: () => {gameState.wokeness = Math.min(100, gameState.wokeness + 10); updateFriendsUI();} },
-              { label: "Support the Bible and debate her", action: () => {gameState.wokeness = Math.min(100, gameState.wokeness - 10); } },
-              { label: "Ignore", action: () => {gameState.wokeness = Math.min(100, gameState.wokeness -5); } }
-            ]
-          );
-      }        
+    16: async () => { 
+      await triggerChoiceEvent(
+          "A student starts arguing with the Bible teacher about morality in the Bible. The student looks around to see if anyone agrees.",
+          [
+            { label: "Join in the conversation", action: () => {gameState.wokeness = Math.min(100, gameState.wokeness + 10); updateFriendsUI();} },
+            { label: "Support the Bible and debate her", action: () => {gameState.wokeness = Math.min(100, gameState.wokeness - 10); } },
+            { label: "Ignore", action: () => {gameState.wokeness = Math.min(100, gameState.wokeness -5); } }
+          ]
+        );
+      },
+    18: async () => {
+      await assembly([
+          '--: The Pastor and the Principal wave to the audience.',
+          'cc: The Pastor: Good morning! Our school counselors will start coming to your classes today to teach about college preparedness!',
+          'tf: The Principal: Using our sponsored program, you will find out what your God-given gifts are!',
+          '--: The chapel is dead silent.',
+          'cc: The Pastor: Come on! You will enjoy this program for sure! Also, it is mandatory for all grades!'
+        ]);
+        renderer.schoolContent.appendChild(createFragment([
+          span('', 'You end up getting more homework due to your class time being spent on multiple required personality tests (You got Woo and Input).'
+               '\n\n'
+        ]));
+          gameState.homeworks += 2;
+          if (renderer.hwCount) renderer.hwCount.textContent = gameState.homeworks;
+     }
     };
     if (gameState.accumulativeDay === 1) {
       if (!renderer.grade) {
@@ -610,7 +619,7 @@ window.gameState= gameState;
     gameState.hwRate += 0.3;
 
 
-    const hwGain = Math.min(10, Math.floor(gameState.hwRate));
+    let hwGain = Math.min(10, Math.floor(gameState.hwRate));
     gameState.homeworks += hwGain;
     if (renderer.hwCount) renderer.hwCount.textContent = gameState.homeworks;
 
@@ -620,9 +629,10 @@ window.gameState= gameState;
     gameState.testReadiness = 0;
     if (renderer.testReadiness) renderer.testReadiness.textContent = gameState.testReadiness;
     updateHomework();
+    const totalHWGained = gameState.homeworks - hwBeforeSchool;
 
     renderer.schoolContent.appendChild(createFragment([
-      span('', `You leave school with ${hwGain} more homework assignment(s) and ${gameState.tests} test(s) to prepare for tomorrow.`),
+      span('', `You leave school with ${totalHWGained} more homework assignment(s) and ${gameState.tests} test(s) to prepare for tomorrow.`),
       '\n\n'
     ]));
     await schoolContinue();
