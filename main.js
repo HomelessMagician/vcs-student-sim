@@ -290,7 +290,7 @@ window.gameState= gameState;
         await schoolContinue();
       }
 
-     if ((gameState.friends === 0 || gameState.trauma == true) && (gameState.grade < 75 ) {
+     if ((gameState.friends === 0 || gameState.trauma == true) && gameState.grade < 75 ) {
         renderer.schoolContent.appendChild(createFragment([
           span('parents-heading', 'CRISIS POINT'),
           '\n\n'
@@ -653,7 +653,7 @@ window.gameState= gameState;
     let hoursLeft = Math.ceil((gameState.time - 8) / 24) * 24 + 8 - gameState.time;
 
     // Crisis point
-    if ((gameState.friends === 0 || gameState.trauma == true) && (gameState.grade < 75 ) {
+    if ((gameState.friends === 0 || gameState.trauma == true) && gameState.grade < 75 ) {
       renderer.schoolContent.appendChild(createFragment([
         '\n',
         span('parents-heading', 'CRISIS POINT'),
