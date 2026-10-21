@@ -495,7 +495,7 @@ window.gameState= gameState;
           [
             { label: "Shout out for help", action: () => { gameState.wokeness = Math.min(100, gameState.wokeness - 15); } },
             { label: "Watch what happens", action: () => { gameState.wokeness = Math.min(100, gameState.wokeness + 20); gameState.trauma = true; } }
-          [
+          ]
         );
       }
     };
