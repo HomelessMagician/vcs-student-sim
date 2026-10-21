@@ -482,8 +482,8 @@ window.gameState= gameState;
           'cc: The Pastor: Come on! You will enjoy this program for sure! Also, it is mandatory for all grades!'
         ]);
         renderer.schoolContent.appendChild(createFragment([
-          span('', 'You end up getting more homework due to your class time being spent on multiple required personality tests (You got Woo and Input).'
-               '\n\n'
+          span('', 'You end up getting more homework due to your class time being spent on multiple required personality tests (You got Woo and Input).'),
+               '\n\n',
         ]));
           gameState.homeworks += 2;
           if (renderer.hwCount) renderer.hwCount.textContent = gameState.homeworks;
