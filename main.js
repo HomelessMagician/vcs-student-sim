@@ -590,8 +590,9 @@ window.gameState= gameState;
 
     if (gameState.accumulativeDay === 2) {
       await assembly([
-        '--: The Pastor waves to the audience.',
-        'cc: Good morning! In order to build a more holy community, we want each and every one of you to go out and build bonds with three fellow disciples! Let\'s make this school like Heaven on Earth! If you don\'t, we will be concerned!'
+        '--: The Pastor and The Principal wave to the audience.',
+        'cc: The Pastor: Good morning! In order to build a more holy community, we want each and every one of you to go out and build bonds with three of your fellow disciples! ',
+        'tf: The Principal: Let\'s make this school like Heaven on Earth! If you don\'t, we will be concerned!'
       ]);
     
       if (renderer.grade && renderer.grade.parentNode) {
