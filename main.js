@@ -497,6 +497,7 @@ window.gameState= gameState;
           { label: "Watch what happens", action: () => { gameState.wokeness = Math.min(100, gameState.wokeness + 20); gameState.trauma = true; } }
         [
       );
+    }
     };
     if (gameState.accumulativeDay === 1) {
       if (!renderer.grade) {
