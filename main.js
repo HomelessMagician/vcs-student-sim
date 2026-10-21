@@ -489,15 +489,15 @@ window.gameState= gameState;
           gameState.homeworks += 2;
           if (renderer.hwCount) renderer.hwCount.textContent = gameState.homeworks;
      },
-    19:async () => {
+    19: async () => {
       await triggerChoiceEvent(
-        "The big Kirk attends your chapel to speak about transgender gang violence. You see a student pull a sniper rifle from their backpack.",
-        [
-          { label: "Shout out for help", action: () => { gameState.wokeness = Math.min(100, gameState.wokeness - 15); } },
-          { label: "Watch what happens", action: () => { gameState.wokeness = Math.min(100, gameState.wokeness + 20); gameState.trauma = true; } }
-        [
-      );
-    }
+          "The big Kirk attends your chapel to speak about transgender gang violence. You see a student pull a sniper rifle from their backpack.",
+          [
+            { label: "Shout out for help", action: () => { gameState.wokeness = Math.min(100, gameState.wokeness - 15); } },
+            { label: "Watch what happens", action: () => { gameState.wokeness = Math.min(100, gameState.wokeness + 20); gameState.trauma = true; } }
+          [
+        );
+      }
     };
     if (gameState.accumulativeDay === 1) {
       if (!renderer.grade) {
