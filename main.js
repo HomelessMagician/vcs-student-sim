@@ -319,6 +319,7 @@ window.gameState= gameState;
                 if (renderer.doHWBtn) disableBtn(renderer.doHWBtn, 'There\'s no school in the afterlife.');
                 if (renderer.studyBtn) disableBtn(renderer.studyBtn, 'There\'s no school in the afterlife.');
                 if (renderer.sleepBtn) disableBtn(renderer.sleepBtn, 'There\'s no school in the afterlife.');
+                return true;
               }
             }
             // {
@@ -342,6 +343,7 @@ window.gameState= gameState;
             //     if (renderer.doHWBtn) disableBtn(renderer.doHWBtn, 'There\'s no school in the afterlife.');
             //     if (renderer.studyBtn) disableBtn(renderer.studyBtn, 'There\'s no school in the afterlife.');
             //     if (renderer.sleepBtn) disableBtn(renderer.sleepBtn, 'There\'s no school in the afterlife.');
+            //     return true;
             //   }
             // }
           ]
@@ -685,6 +687,7 @@ window.gameState= gameState;
               if (renderer.doHWBtn) disableBtn(renderer.doHWBtn, 'There\'s no school in the afterlife.');
               if (renderer.studyBtn) disableBtn(renderer.studyBtn, 'There\'s no school in the afterlife.');
               if (renderer.sleepBtn) disableBtn(renderer.sleepBtn, 'There\'s no school in the afterlife.');
+              return true;
             }
           }
           // {
@@ -708,6 +711,7 @@ window.gameState= gameState;
           //     if (renderer.doHWBtn) disableBtn(renderer.doHWBtn, 'There\'s no school in the afterlife.');
           //     if (renderer.studyBtn) disableBtn(renderer.studyBtn, 'There\'s no school in the afterlife.');
           //     if (renderer.sleepBtn) disableBtn(renderer.sleepBtn, 'There\'s no school in the afterlife.');
+          //     return true;
           //   }
           // }
         ]
